@@ -12,6 +12,7 @@ use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 
 $app = Factory::getApplication();
+$session = \Joomla\CMS\Factory::getSession();
 $input = $app->input;
 
 $user = Factory::getUser();
@@ -22,27 +23,30 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'cancel') {
     \Joomla\CMS\Session\Session::checkToken() or die('Invalid Token');
 
     if (!$user->id) {
-        $app->enqueueMessage('Du måste vara inloggad för att avboka.', 'error');
+        $session->set('mod_booking_message', ['text' => 'Du måste vara inloggad för att avboka.', 'type' => 'error']);
         $ref = $app->input->server->getString('HTTP_REFERER', '');
-        $app->redirect($ref ? $ref : '/');
+        header('Location: ' . ($ref ? $ref : '/'));
+        exit;
     }
 
     $bookingId = $input->getInt('booking_id');
     if (!$bookingId) {
-        $app->enqueueMessage('Ogiltigt boknings-ID.', 'error');
+        $session->set('mod_booking_message', ['text' => 'Ogiltigt boknings-ID.', 'type' => 'error']);
         $ref = $app->input->server->getString('HTTP_REFERER', '');
-        $app->redirect($ref ? $ref : '/');
+        header('Location: ' . ($ref ? $ref : '/'));
+        exit;
     }
 
     $helper = new ModBookingHelper;
     if ($helper->cancelBooking($bookingId, $user->id, $isSuperUser)) {
-        $app->enqueueMessage('Bokningen har avbokats.');
+        $session->set('mod_booking_message', ['text' => 'Bokningen har avbokats.', 'type' => 'message']);
     } else {
-        $app->enqueueMessage('Kunde inte avboka bokningen. Du kanske inte har behörighet eller så är den ogiltig.', 'error');
+        $session->set('mod_booking_message', ['text' => 'Kunde inte avboka bokningen. Du kanske inte har behörighet eller så är den ogiltig.', 'type' => 'error']);
     }
 
     $ref = $app->input->server->getString('HTTP_REFERER', '');
-    $app->redirect($ref ? $ref : '/');
+    header('Location: ' . ($ref ? $ref : '/'));
+    exit;
 }
 
 // Handle booking POST
@@ -50,17 +54,19 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
     \Joomla\CMS\Session\Session::checkToken() or die('Invalid Token');
 
     if (!$user->id) {
-        $app->enqueueMessage('Du måste vara inloggad för att boka.', 'error');
+        $session->set('mod_booking_message', ['text' => 'Du måste vara inloggad för att boka.', 'type' => 'error']);
         // Redirect back to referer when possible to avoid malformed REQUEST_URI issues
         $ref = $app->input->server->getString('HTTP_REFERER', '');
-        $app->redirect($ref ? $ref : '/');
+        header('Location: ' . ($ref ? $ref : '/'));
+        exit;
     }
 
     $periodId = $input->getInt('period_id');
     if (!$periodId) {
-        $app->enqueueMessage('Ogiltig period.', 'error');
+        $session->set('mod_booking_message', ['text' => 'Ogiltig period.', 'type' => 'error']);
         $ref = $app->input->server->getString('HTTP_REFERER', '');
-        $app->redirect($ref ? $ref : '/');
+        header('Location: ' . ($ref ? $ref : '/'));
+        exit;
     }
 
     // Load period from DB to get desk_id, start_time, end_time
@@ -84,9 +90,10 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
     }
 
     if (empty($period) || empty($period->desk_id) || empty($period->start_time)) {
-        $app->enqueueMessage('Ogiltig period.', 'error');
+        $session->set('mod_booking_message', ['text' => 'Ogiltig period.', 'type' => 'error']);
         $ref = $app->input->server->getString('HTTP_REFERER', '');
-        $app->redirect($ref ? $ref : '/');
+        header('Location: ' . ($ref ? $ref : '/'));
+        exit;
     }
 
     $helper = new ModBookingHelper;
@@ -98,14 +105,15 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
     ]);
 
     if ($result) {
-        $app->enqueueMessage('Bokningen sparades.');
+        $session->set('mod_booking_message', ['text' => 'Bokningen sparades.', 'type' => 'message']);
     } else {
-        $app->enqueueMessage('Kunde inte spara bokningen (kanske redan bokat).', 'error');
+        $session->set('mod_booking_message', ['text' => 'Kunde inte spara bokningen (kanske redan bokat).', 'type' => 'error']);
     }
 
     // Redirect to avoid form resubmission. Use referer when available to prevent routing/SEF issues.
     $ref = $app->input->server->getString('HTTP_REFERER', '');
-    $app->redirect($ref ? $ref : '/');
+    header('Location: ' . ($ref ? $ref : '/'));
+    exit;
 }
 
 // Fetch data for the view
@@ -114,6 +122,14 @@ $isSuperUser = $user->authorise('core.admin');
 $available = ModBookingHelper::getAvailable();
 $bookings = ModBookingHelper::getBookings($isSuperUser);
 $personalBookings = ModBookingHelper::getPersonalBookings();
+
+
+// Visa eventuellt sparat systemmeddelande från sessionen
+$bookingMessage = $session->get('mod_booking_message', null);
+if ($bookingMessage && !empty($bookingMessage['text'])) {
+    $app->enqueueMessage($bookingMessage['text'], $bookingMessage['type']);
+    $session->set('mod_booking_message', null);
+}
 
 $layout = $params->get('layout', 'default');
 
