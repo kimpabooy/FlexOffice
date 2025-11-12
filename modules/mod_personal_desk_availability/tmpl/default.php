@@ -13,8 +13,8 @@ use Joomla\CMS\Session\Session;
             <select name="desk_id" id="desk_id">
                 <?php foreach ($desks as $d) : ?>
                     <option value="<?php echo (int) $d->id; ?>"><?php echo 'Skrivbord #' . (int) $d->id . ' — ' . htmlspecialchars($d->room_name ?? '', ENT_QUOTES, 'UTF-8'); ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div>
@@ -84,11 +84,12 @@ use Joomla\CMS\Session\Session;
         </div>
 
         <div>
+            <input type="hidden" name="task" value="personaldesk.save" />
             <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1" />
         </div>
 
         <script>
-            (function(){
+            (function() {
                 var rangeFields = document.getElementById('rangeFields');
                 var weekdayFields = document.getElementById('weekdayFields');
                 var modeRange = document.getElementById('mode_range');
@@ -101,8 +102,12 @@ use Joomla\CMS\Session\Session;
                         // make time fields not required
                         var st = document.getElementById('start_time');
                         var et = document.getElementById('end_time');
-                        if (st) { st.required = false; }
-                        if (et) { et.required = false; }
+                        if (st) {
+                            st.required = false;
+                        }
+                        if (et) {
+                            et.required = false;
+                        }
                         // start_date is hidden in this mode; remove required so browser doesn't block submit
                         var sd = document.getElementById('start_date');
                         if (sd) {
@@ -119,9 +124,13 @@ use Joomla\CMS\Session\Session;
                         weekdayFields.style.display = 'none';
                         // restore required attributes for visible fields
                         var st = document.getElementById('start_time');
-                        if (st) { st.required = true; }
+                        if (st) {
+                            st.required = true;
+                        }
                         var sd = document.getElementById('start_date');
-                        if (sd) { sd.required = true; }
+                        if (sd) {
+                            sd.required = true;
+                        }
                         // end_time optional
                     }
                 }
@@ -133,11 +142,11 @@ use Joomla\CMS\Session\Session;
         </script>
 
         <script>
-            (function(){
+            (function() {
                 var form = document.getElementById('mod_personal_desk_availability_form');
                 if (!form) return;
 
-                form.addEventListener('submit', function(e){
+                form.addEventListener('submit', function(e) {
                     // If weekday mode is selected, ensure a weekday is chosen
                     var modeWeek = document.getElementById('mode_weekday');
                     if (modeWeek && modeWeek.checked) {
@@ -157,7 +166,9 @@ use Joomla\CMS\Session\Session;
                         btn.textContent = 'Sparar...';
                     }
                     // allow normal submit to proceed
-                }, { passive: false });
+                }, {
+                    passive: false
+                });
             })();
         </script>
 

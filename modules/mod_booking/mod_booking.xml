@@ -23,6 +23,10 @@
                     <option value="1">Visa</option>
                     <option value="0">Dölj</option>
                 </field>
+                <field name="show_personal_bookings" type="radio" default="1" label="Visa mina bokningar" description="Visa eller dölj listan över mina bokningar.">
+                    <option value="1">Visa</option>
+                    <option value="0">Dölj</option>
+                </field>
             </fieldset>
         </fields>
     </config>

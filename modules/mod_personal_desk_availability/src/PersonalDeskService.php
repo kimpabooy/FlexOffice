@@ -233,7 +233,8 @@ class PersonalDeskService
         $app = Factory::getApplication();
         $input = $app->input;
 
-        if ($input->getMethod() !== 'POST') {
+        // Only handle POST requests with the correct task
+        if ($input->getMethod() !== 'POST' || $input->getCmd('task') !== 'personaldesk.save') {
             return;
         }
 

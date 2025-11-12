@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Site
  * @subpackage  mod_booking
@@ -13,23 +14,52 @@ use Joomla\Database\DatabaseInterface;
 $app = Factory::getApplication();
 $input = $app->input;
 
+// Handle booking cancellation
+if ($input->getMethod() === 'POST' && $input->get('task') === 'cancel') {
+    \Joomla\CMS\Session\Session::checkToken() or die('Invalid Token');
+
+    $user = Factory::getUser();
+    if (!$user->id) {
+        $app->enqueueMessage('Du måste vara inloggad för att avboka.', 'error');
+        $ref = $app->input->server->getString('HTTP_REFERER', '');
+        $app->redirect($ref ? $ref : '/');
+    }
+
+    $bookingId = $input->getInt('booking_id');
+    if (!$bookingId) {
+        $app->enqueueMessage('Ogiltigt boknings-ID.', 'error');
+        $ref = $app->input->server->getString('HTTP_REFERER', '');
+        $app->redirect($ref ? $ref : '/');
+    }
+
+    $helper = new ModBookingHelper;
+    if ($helper->cancelBooking($bookingId, $user->id)) {
+        $app->enqueueMessage('Bokningen har avbokats.');
+    } else {
+        $app->enqueueMessage('Kunde inte avboka bokningen. Du kanske inte har behörighet eller så är den ogiltig.', 'error');
+    }
+
+    $ref = $app->input->server->getString('HTTP_REFERER', '');
+    $app->redirect($ref ? $ref : '/');
+}
+
 // Handle booking POST
 if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
     \Joomla\CMS\Session\Session::checkToken() or die('Invalid Token');
 
     $user = Factory::getUser();
     if (!$user->id) {
-    $app->enqueueMessage('Du måste vara inloggad för att boka.', 'error');
-    // Redirect back to referer when possible to avoid malformed REQUEST_URI issues
-    $ref = $app->input->server->getString('HTTP_REFERER', '');
-    $app->redirect($ref ? $ref : '/');
+        $app->enqueueMessage('Du måste vara inloggad för att boka.', 'error');
+        // Redirect back to referer when possible to avoid malformed REQUEST_URI issues
+        $ref = $app->input->server->getString('HTTP_REFERER', '');
+        $app->redirect($ref ? $ref : '/');
     }
 
     $periodId = $input->getInt('period_id');
     if (!$periodId) {
-    $app->enqueueMessage('Ogiltig period.', 'error');
-    $ref = $app->input->server->getString('HTTP_REFERER', '');
-    $app->redirect($ref ? $ref : '/');
+        $app->enqueueMessage('Ogiltig period.', 'error');
+        $ref = $app->input->server->getString('HTTP_REFERER', '');
+        $app->redirect($ref ? $ref : '/');
     }
 
     // Load period from DB to get desk_id, start_time, end_time
@@ -53,9 +83,9 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
     }
 
     if (empty($period) || empty($period->desk_id) || empty($period->start_time)) {
-    $app->enqueueMessage('Ogiltig period.', 'error');
-    $ref = $app->input->server->getString('HTTP_REFERER', '');
-    $app->redirect($ref ? $ref : '/');
+        $app->enqueueMessage('Ogiltig period.', 'error');
+        $ref = $app->input->server->getString('HTTP_REFERER', '');
+        $app->redirect($ref ? $ref : '/');
     }
 
     $helper = new ModBookingHelper;
@@ -80,6 +110,7 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
 $helper = new ModBookingHelper;
 $available = $helper->getAvailable();
 $bookings = $helper->getBookings();
+$personalBookings = $helper->getPersonalBookings();
 
 // If this is an AJAX request for a different week, render only the calendar fragment
 $isAjax = strtolower($app->input->server->getString('HTTP_X_REQUESTED_WITH', '')) === 'xmlhttprequest' && $input->getString('start', '') !== '';

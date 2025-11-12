@@ -277,4 +277,35 @@ use Joomla\CMS\HTML\HTMLHelper;
             <?php endif; ?>
         </ul>
     <?php endif; ?>
+
+    <?php if ($params->get('show_personal_bookings', 0) && !empty($personalBookings)): ?>
+        <!-- <h4>Mina bokningar</h4> -->
+        <ul class="mod-booking-list-personal">
+            <?php foreach ($personalBookings as $b): ?>
+                <?php
+                // Format start/end times without seconds (YYYY-MM-DD HH:MM)
+                $startFmt = '';
+                $endFmt = '';
+                if (!empty($b->start_time) && strtotime($b->start_time) !== false) {
+                    $startFmt = htmlspecialchars(date('Y-m-d H:i', strtotime($b->start_time)), ENT_QUOTES, 'UTF-8');
+                }
+                if (!empty($b->end_time) && strtotime($b->end_time) !== false) {
+                    $endFmt = htmlspecialchars(date('Y-m-d H:i', strtotime($b->end_time)), ENT_QUOTES, 'UTF-8');
+                }
+                ?>
+                <li>
+                    <?php echo 'Skrivbord ' . ((int)$b->desk_id) . ' — ' . $startFmt . ' till ' . $endFmt; ?>
+                    <form method="post" action="" style="display: inline; margin-left: 10px;">
+                        <?= HTMLHelper::_('form.token'); ?>
+                        <input type="hidden" name="task" value="cancel" />
+                        <input type="hidden" name="booking_id" value="<?= (int) $b->id ?>" />
+                        <button type="submit" class="btn btn-danger btn-sm">Avboka</button>
+                    </form>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php elseif ($params->get('show_personal_bookings', 0)): ?>
+        <h4>Mina bokningar</h4>
+        <p>Du har inga kommande bokningar.</p>
+    <?php endif; ?>
 </div>

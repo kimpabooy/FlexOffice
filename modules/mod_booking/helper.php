@@ -149,4 +149,71 @@ class ModBookingHelper
             return false;
         }
     }
+
+    /**
+     * Get personal bookings for the current user.
+     *
+     * @return array
+     */
+    public static function getPersonalBookings()
+    {
+        $user = Factory::getUser();
+        if (!$user->id) {
+            return [];
+        }
+
+        if (method_exists(Factory::class, 'getContainer')) {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+        } else {
+            $db = Factory::getDbo();
+        }
+
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
+        $query = $db->getQuery(true)
+            ->select(['b.*', $db->quoteName('u.name') . ' AS ' . $db->quoteName('user_name')])
+            ->from($db->quoteName('#__booking', 'b'))
+            ->join('LEFT', $db->quoteName('#__users', 'u') . ' ON u.id = b.user_id')
+            ->where('b.user_id = ' . (int) $user->id)
+            ->where('(b.' . $db->quoteName('end_time') . ' IS NULL OR b.' . $db->quoteName('end_time') . ' >= ' . $db->quote($now) . ')')
+            ->order('b.start_time ASC');
+
+        $db->setQuery($query);
+
+        try {
+            return $db->loadObjectList();
+        } catch (\RuntimeException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Cancel a booking.
+     *
+     * @param int $bookingId
+     * @param int $userId
+     * @return bool
+     */
+    public static function cancelBooking(int $bookingId, int $userId)
+    {
+        if (method_exists(Factory::class, 'getContainer')) {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+        } else {
+            $db = Factory::getDbo();
+        }
+
+        $query = $db->getQuery(true)
+            ->delete($db->quoteName('#__booking'))
+            ->where($db->quoteName('id') . ' = ' . $bookingId)
+            ->where($db->quoteName('user_id') . ' = ' . $userId);
+
+        $db->setQuery($query);
+
+        try {
+            $db->execute();
+            return $db->getAffectedRows() > 0;
+        } catch (\RuntimeException $e) {
+            return false;
+        }
+    }
 }
