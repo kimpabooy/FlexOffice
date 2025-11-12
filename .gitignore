@@ -1,0 +1,26 @@
+# Ignore Joomla core folders
+/administrator/
+/api/
+/cache/
+/cli/
+/components/
+/files/
+/images/
+/includes/
+/installation/
+/language/
+/layouts/
+/libraries/
+/media/
+/plugins/
+/templates/
+/tmp/
+
+# Ignore Joomla core files
+/configuration.php
+/htaccess.txt
+/index.php
+/LICENSE.txt
+/README.txt
+/robots.txt.dist
+/web.config.txt
