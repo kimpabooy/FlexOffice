@@ -108,7 +108,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                     <div style="margin-bottom:8px;"><strong>Rum:</strong> <span id="mod-booking-modal-room"></span></div>
                     <div style="margin-bottom:8px;"><strong>Skrivbord:</strong> <span id="mod-booking-modal-desk"></span></div>
                     <div style="margin-bottom:12px;"><strong>Tid:</strong> <span id="mod-booking-modal-time"></span></div>
-                    <div style="margin-bottom:12px;"><strong>Kommentar:</strong> <span id="mod-booking-modal-description"></span></div>
+                    <div style="margin-bottom:12px;"><strong>Kommentar:</strong> <span id="mod-booking-modal-comment"></span></div>
                     <div style="text-align:right;">
                         <button type="button" id="mod-booking-modal-cancel" class="btn btn-secondary btn-sm" style="margin-right:8px;">Avbryt</button>
                         <button type="button" id="mod-booking-modal-confirm" class="btn btn-primary btn-sm">Boka</button>
@@ -129,7 +129,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                 var cancelBtn = document.getElementById('mod-booking-modal-cancel');
                 var confirmBtn = document.getElementById('mod-booking-modal-confirm');
                 var periodInput = document.getElementById('mod_booking_period_id');
-                var descriptionElement = document.getElementById('mod-booking-modal-description');
+                var commentElement = document.getElementById('mod-booking-modal-comment');
                 var currentPeriodId = null;
 
                 function openModal(data) {
@@ -138,7 +138,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                     roomElement.textContent = data.room || '';
                     locationGroupElement.textContent = data.locationGroup || '';
                     locationElement.textContent = data.location || '';
-                    descriptionElement.textContent = data.description || 'N/A';
+                    commentElement.textContent = data.comment || 'N/A';
                     // Format times: show full provided timestamps or fallback to provided short
                     if (data.start && data.end) {
                         var s = data.start.slice(0, -3);
@@ -169,7 +169,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                                 room: btn.getAttribute('data-room'),
                                 locationGroup: btn.getAttribute('data-location-group'),
                                 location: btn.getAttribute('data-location'),
-                                description: btn.getAttribute('data-description'),
+                                comment: btn.getAttribute('data-description'),
                                 start: btn.getAttribute('data-start'),
                                 end: btn.getAttribute('data-end'),
                                 startShort: btn.textContent
