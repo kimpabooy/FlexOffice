@@ -108,7 +108,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                     <div style="margin-bottom:8px;"><strong>Rum:</strong> <span id="mod-booking-modal-room"></span></div>
                     <div style="margin-bottom:8px;"><strong>Skrivbord:</strong> <span id="mod-booking-modal-desk"></span></div>
                     <div style="margin-bottom:12px;"><strong>Tid:</strong> <span id="mod-booking-modal-time"></span></div>
-                    <div style="margin-bottom:12px;"><strong>Beskrivning:</strong> <span id="mod-booking-modal-description"></span></div>
+                    <div style="margin-bottom:12px;"><strong>Kommentar:</strong> <span id="mod-booking-modal-description"></span></div>
                     <div style="text-align:right;">
                         <button type="button" id="mod-booking-modal-cancel" class="btn btn-secondary btn-sm" style="margin-right:8px;">Avbryt</button>
                         <button type="button" id="mod-booking-modal-confirm" class="btn btn-primary btn-sm">Boka</button>
@@ -138,7 +138,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                     roomElement.textContent = data.room || '';
                     locationGroupElement.textContent = data.locationGroup || '';
                     locationElement.textContent = data.location || '';
-                    descriptionElement.textContent = data.description || '';
+                    descriptionElement.textContent = data.description || 'N/A';
                     // Format times: show full provided timestamps or fallback to provided short
                     if (data.start && data.end) {
                         var s = data.start.slice(0, -3);
