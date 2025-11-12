@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="4.0" client="site" method="upgrade">
+    <name>mod_desk_manager</name>
+    <author>Generated</author>
+    <version>1.0.0</version>
+    <description>Modul för att skapa platser, grupper, rum och skrivbord</description>
+    <files>
+        <filename module="mod_desk_manager">mod_desk_manager.php</filename>
+        <filename>helper.php</filename>
+        <folder>tmpl</folder>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="show_Create_Location" type="checkbox" default="1" label="Visa Skapa plats" description="Visa eller dölj bokningsformuläret och kalendern i modulen.">
+                    <option value="1">Visa</option>
+                    <option value="0">Dölj</option>
+                </field>
+                <field name="show_Create_Group" type="checkbox" default="1" label="Visa Skapa avdelning" description="Visa eller dölj bokningsformuläret och kalendern i modulen.">
+                    <option value="1">Visa</option>
+                    <option value="0">Dölj</option>
+                </field>
+                <field name="show_Create_Room" type="checkbox" default="1" label="Visa Skapa rum" description="Visa eller dölj bokningsformuläret och kalendern i modulen.">
+                    <option value="1">Visa</option>
+                    <option value="0">Dölj</option>
+                </field>
+                <field name="show_Create_Desk" type="checkbox" default="1" label="Visa Skapa skrivbord" description="Visa eller dölj bokningsformuläret och kalendern i modulen.">
+                    <option value="1">Visa</option>
+                    <option value="0">Dölj</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.mod_desk_manager.ini</language>
+        <language tag="sv-SE">language/sv-SE/sv-SE.mod_desk_manager.ini</language>
+    </languages>
+</extension>

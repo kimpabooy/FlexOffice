@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="4.0" client="site" method="upgrade">
+    <name>mod_desk_availability_period</name>
+    <author>Auto-generated</author>
+    <version>1.0.0</version>
+    <description>Visar lediga perioder för skrivbord</description>
+
+    <files>
+        <filename module="mod_desk_availability_period">mod_desk_availability_period.php</filename>
+        <filename>helper.php</filename>
+        <folder>tmpl</folder>
+    </files>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="limit" type="number" default="20" label="Visningsgräns" description="Max antal perioder att visa"/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>
