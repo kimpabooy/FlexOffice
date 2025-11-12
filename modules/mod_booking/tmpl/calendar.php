@@ -62,26 +62,26 @@ $weekEndLabel = htmlspecialchars(date('j M Y', strtotime('+6 days', $mondayTs)),
             <button class="btn btn-secondary btn-sm" disabled>&larr; Föregående</button>
         <?php endif; ?>
         <strong style="margin:0 10px;"><?php echo $weekStartLabel . ' — ' . $weekEndLabel; ?></strong>
-        
-    <a class="btn btn-secondary btn-sm mod-booking-week-link" href="#" data-start="<?php echo date('Y-m-d', $nextTs); ?>">Nästa &rarr;</a>
+
+        <a class="btn btn-secondary btn-sm mod-booking-week-link" href="#" data-start="<?php echo date('Y-m-d', $nextTs); ?>">Nästa &rarr;</a>
     </div>
 
     <table class="table table-bordered" style="table-layout:fixed;">
         <thead>
             <tr>
                 <?php
-                    $days = ['Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag','Söndag'];
-                    for ($i=0;$i<7;$i++) {
-                        $dTs = strtotime('+' . $i . ' days', $mondayTs);
-                        echo '<th>' . $days[$i] . '<br/>' . date('j/n', $dTs) . '</th>';
-                    }
+                $days = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'];
+                for ($i = 0; $i < 7; $i++) {
+                    $dTs = strtotime('+' . $i . ' days', $mondayTs);
+                    echo '<th>' . $days[$i] . '<br/>' . date('j/n', $dTs) . '</th>';
+                }
                 ?>
             </tr>
         </thead>
         <tbody>
             <tr>
-            <?php
-                for ($i=0;$i<7;$i++) {
+                <?php
+                for ($i = 0; $i < 7; $i++) {
                     $dTs = strtotime('+' . $i . ' days', $mondayTs);
                     $currentDate = date('Y-m-d', $dTs);
                     echo '<td style="vertical-align:top; padding:6px;">';
@@ -93,14 +93,20 @@ $weekEndLabel = htmlspecialchars(date('j M Y', strtotime('+6 days', $mondayTs)),
                             $endTime = $endTs ? htmlspecialchars(date('H:i', $endTs), ENT_QUOTES, 'UTF-8') : '';
                             echo '<div style="font-size:90%; margin-top:4px;">';
                             $roomLabel = '';
-                            if (isset($p->room_name)) { $roomLabel = $p->room_name; }
-                            elseif (isset($p->room)) { $roomLabel = $p->room; }
+                            if (isset($p->room_name)) {
+                                $roomLabel = $p->room_name;
+                            } elseif (isset($p->room)) {
+                                $roomLabel = $p->room;
+                            }
                             $roomLabelEsc = htmlspecialchars($roomLabel, ENT_QUOTES, 'UTF-8');
                             if ($user->id) {
                                 echo '<button type="button" class="btn btn-secondary btn-sm mod-booking-open" '
                                     . 'data-period-id="' . (int)$p->id . '" '
                                     . 'data-desk="' . htmlspecialchars((int)$p->desk_id, ENT_QUOTES, 'UTF-8') . '" '
                                     . 'data-room="' . $roomLabelEsc . '" '
+                                    . 'data-location-group="' . htmlspecialchars($p->location_group_name, ENT_QUOTES, 'UTF-8') . '" '
+                                    . 'data-location="' . htmlspecialchars($p->location_name, ENT_QUOTES, 'UTF-8') . '" '
+                                    . 'data-description="' . htmlspecialchars($p->name, ENT_QUOTES, 'UTF-8') . '" '
                                     . 'data-start="' . htmlspecialchars($p->start_time, ENT_QUOTES, 'UTF-8') . '" '
                                     . 'data-end="' . htmlspecialchars($p->end_time ?: '', ENT_QUOTES, 'UTF-8') . '">'
                                     . '<strong>' . (int)$p->desk_id . '</strong> ' . $startTime . '-' . $endTime
@@ -114,7 +120,7 @@ $weekEndLabel = htmlspecialchars(date('j M Y', strtotime('+6 days', $mondayTs)),
                     }
                     echo '</td>';
                 }
-            ?>
+                ?>
             </tr>
         </tbody>
     </table>
