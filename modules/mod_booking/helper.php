@@ -23,10 +23,17 @@ class ModBookingHelper
         $now = (new \DateTime())->format('Y-m-d H:i:s');
 
         $query = $db->getQuery(true)
-            ->select(['p.*', $db->quoteName('r.name') . ' AS ' . $db->quoteName('room_name')])
+            ->select([
+                'p.*',
+                $db->quoteName('r.name') . ' AS ' . $db->quoteName('room_name'),
+                $db->quoteName('lg.name') . ' AS ' . $db->quoteName('location_group_name'),
+                $db->quoteName('l.name') . ' AS ' . $db->quoteName('location_name')
+            ])
             ->from($db->quoteName('#__desk_availability_period', 'p'))
             ->join('LEFT', $db->quoteName('#__desk', 'd') . ' ON d.id = p.desk_id')
             ->join('LEFT', $db->quoteName('#__rooms', 'r') . ' ON r.id = d.room_id')
+            ->join('LEFT', $db->quoteName('#__location_group', 'lg') . ' ON lg.id = r.location_group_id')
+            ->join('LEFT', $db->quoteName('#__location', 'l') . ' ON l.id = lg.location_id')
             // Exclude placeholder rows where both start_time and end_time are NULL
             ->where('(' . $db->quoteName('p.start_time') . ' IS NOT NULL OR ' . $db->quoteName('p.end_time') . ' IS NOT NULL)')
             ->where('(p.' . $db->quoteName('end_time') . ' IS NULL OR p.' . $db->quoteName('end_time') . ' >= ' . $db->quote($now) . ')');
@@ -39,7 +46,7 @@ class ModBookingHelper
             ->where('(' .
                 'b.' . $db->quoteName('start_time') . ' < COALESCE(p.' . $db->quoteName('end_time') . ', ' . $db->quote('9999-12-31 23:59:59') . ')' .
                 ' AND b.' . $db->quoteName('end_time') . ' > p.' . $db->quoteName('start_time') .
-            ')');
+                ')');
 
         $query->where('NOT EXISTS (' . $sub . ')');
         $query->order('p.' . $db->quoteName('start_time') . ' ASC');
@@ -113,7 +120,7 @@ class ModBookingHelper
             ->where('(' .
                 'b.' . $db->quoteName('start_time') . ' < ' . $db->quote($endTime ?: '9999-12-31 23:59:59') .
                 ' AND b.' . $db->quoteName('end_time') . ' > ' . $db->quote($booking['start_time']) .
-            ')');
+                ')');
 
         $db->setQuery($subQ);
         try {
@@ -127,7 +134,7 @@ class ModBookingHelper
         }
 
         $columns = ['desk_id', 'user_id', 'start_time', 'end_time'];
-        $values = [ (int) $booking['desk_id'], (int) $booking['user_id'], $db->quote($booking['start_time']), $endTime ? $db->quote($endTime) : 'NULL' ];
+        $values = [(int) $booking['desk_id'], (int) $booking['user_id'], $db->quote($booking['start_time']), $endTime ? $db->quote($endTime) : 'NULL'];
 
         $query = $db->getQuery(true)
             ->insert($db->quoteName('#__booking'))
