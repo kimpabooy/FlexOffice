@@ -14,11 +14,13 @@ use Joomla\Database\DatabaseInterface;
 $app = Factory::getApplication();
 $input = $app->input;
 
+$user = Factory::getUser();
+$isSuperUser = $user->authorise('core.admin');
+
 // Handle booking cancellation
 if ($input->getMethod() === 'POST' && $input->get('task') === 'cancel') {
     \Joomla\CMS\Session\Session::checkToken() or die('Invalid Token');
 
-    $user = Factory::getUser();
     if (!$user->id) {
         $app->enqueueMessage('Du måste vara inloggad för att avboka.', 'error');
         $ref = $app->input->server->getString('HTTP_REFERER', '');
@@ -33,7 +35,7 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'cancel') {
     }
 
     $helper = new ModBookingHelper;
-    if ($helper->cancelBooking($bookingId, $user->id)) {
+    if ($helper->cancelBooking($bookingId, $user->id, $isSuperUser)) {
         $app->enqueueMessage('Bokningen har avbokats.');
     } else {
         $app->enqueueMessage('Kunde inte avboka bokningen. Du kanske inte har behörighet eller så är den ogiltig.', 'error');
@@ -47,7 +49,6 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'cancel') {
 if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
     \Joomla\CMS\Session\Session::checkToken() or die('Invalid Token');
 
-    $user = Factory::getUser();
     if (!$user->id) {
         $app->enqueueMessage('Du måste vara inloggad för att boka.', 'error');
         // Redirect back to referer when possible to avoid malformed REQUEST_URI issues
@@ -107,10 +108,14 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
     $app->redirect($ref ? $ref : '/');
 }
 
-$helper = new ModBookingHelper;
-$available = $helper->getAvailable();
-$bookings = $helper->getBookings();
-$personalBookings = $helper->getPersonalBookings();
+// Fetch data for the view
+$user = Joomla\CMS\Factory::getUser();
+$isSuperUser = $user->authorise('core.admin');
+$available = ModBookingHelper::getAvailable();
+$bookings = ModBookingHelper::getBookings($isSuperUser);
+$personalBookings = ModBookingHelper::getPersonalBookings();
+
+$layout = $params->get('layout', 'default');
 
 // If this is an AJAX request for a different week, render only the calendar fragment
 $isAjax = strtolower($app->input->server->getString('HTTP_X_REQUESTED_WITH', '')) === 'xmlhttprequest' && $input->getString('start', '') !== '';
@@ -125,4 +130,4 @@ if ($isAjax) {
     return;
 }
 
-require \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_booking', $params->get('layout', 'default'));
+require \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_booking', $layout);

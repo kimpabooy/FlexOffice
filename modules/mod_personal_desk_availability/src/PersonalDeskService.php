@@ -171,7 +171,7 @@ class PersonalDeskService
      *
      * @return array
      */
-    public static function getRecentAvails()
+    public static function getRecentAvails($isSuperUser = false)
     {
         $db = self::getDbInstance();
 
@@ -213,6 +213,14 @@ class PersonalDeskService
         if (in_array('created_by', $tableCols)) {
             $query->join('LEFT', $db->quoteName('#__users', 'u') . ' ON ' . 'u.id = p.created_by');
             $query->select($db->quoteName('u.name') . ' AS ' . $db->quoteName('created_by_name'));
+        }
+
+        // Filter by current user unless super user
+        if (!$isSuperUser) {
+            $userId = self::getCurrentUserId();
+            if ($userId !== null && $userId > 0 && in_array('created_by', $tableCols)) {
+                $query->where('p.' . $db->quoteName('created_by') . ' = ' . (int) $userId);
+            }
         }
 
         $query->order('p.' . $db->quoteName('start_time') . ' DESC');

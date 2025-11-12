@@ -65,7 +65,7 @@ class ModBookingHelper
      *
      * @return array
      */
-    public static function getBookings()
+    public static function getBookings($isSuperUser = false)
     {
         if (method_exists(Factory::class, 'getContainer')) {
             $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -82,6 +82,15 @@ class ModBookingHelper
             ->join('LEFT', $db->quoteName('#__users', 'u') . ' ON u.id = b.user_id')
             ->where('(b.' . $db->quoteName('end_time') . ' IS NULL OR b.' . $db->quoteName('end_time') . ' >= ' . $db->quote($now) . ')')
             ->order('b.start_time ASC');
+
+        if (!$isSuperUser) {
+            $user = Factory::getUser();
+            if ($user->id) {
+                $query->where($db->quoteName('b.user_id') . ' = ' . (int) $user->id);
+            } else {
+                return [];
+            }
+        }
 
         $db->setQuery($query);
 
@@ -194,7 +203,7 @@ class ModBookingHelper
      * @param int $userId
      * @return bool
      */
-    public static function cancelBooking(int $bookingId, int $userId)
+    public static function cancelBooking(int $bookingId, int $userId, bool $isSuperUser = false)
     {
         if (method_exists(Factory::class, 'getContainer')) {
             $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -204,8 +213,11 @@ class ModBookingHelper
 
         $query = $db->getQuery(true)
             ->delete($db->quoteName('#__booking'))
-            ->where($db->quoteName('id') . ' = ' . $bookingId)
-            ->where($db->quoteName('user_id') . ' = ' . $userId);
+            ->where($db->quoteName('id') . ' = ' . $bookingId);
+
+        if (!$isSuperUser) {
+            $query->where($db->quoteName('user_id') . ' = ' . $userId);
+        }
 
         $db->setQuery($query);
 

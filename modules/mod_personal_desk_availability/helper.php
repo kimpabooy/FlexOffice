@@ -21,8 +21,8 @@ class ModPersonalDeskAvailabilityHelper
         return PersonalDeskService::getDesks();
     }
 
-    public static function getRecentAvails()
+    public static function getRecentAvails($isSuperUser = false)
     {
-        return PersonalDeskService::getRecentAvails();
+        return PersonalDeskService::getRecentAvails($isSuperUser);
     }
 }
