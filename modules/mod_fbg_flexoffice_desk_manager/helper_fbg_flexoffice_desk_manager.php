@@ -3,6 +3,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 
 class ModFbgFlexofficeDeskManagerHelper
 {
@@ -21,7 +22,7 @@ class ModFbgFlexofficeDeskManagerHelper
             return;
         }
 
-        $db = Factory::getDbo();
+        $db = method_exists(Factory::class, 'getContainer') ? Factory::getContainer()->get(DatabaseInterface::class) : Factory::getDbo();
         // Use a module-specific task name to avoid interfering with Joomla's global "task" routing
         $task = $input->post->getString('mod_task');
 
