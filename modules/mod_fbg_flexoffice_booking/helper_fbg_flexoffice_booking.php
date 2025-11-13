@@ -70,7 +70,7 @@ class ModFbgFlexofficeBookingHelper
         if (method_exists(Factory::class, 'getContainer')) {
             $db = Factory::getContainer()->get(DatabaseInterface::class);
         } else {
-            $db = Factory::getDbo();
+            $db = method_exists(Factory::class, 'getContainer') ? Factory::getContainer()->get(DatabaseInterface::class) : Factory::getDbo();
         }
         // Show only active (non-expired) bookings: those without an end_time or with end_time >= now
         $now = (new \DateTime())->format('Y-m-d H:i:s');
@@ -84,7 +84,7 @@ class ModFbgFlexofficeBookingHelper
             ->order('b.start_time ASC');
 
         if (!$isSuperUser) {
-            $user = Factory::getUser();
+            $user = \Joomla\CMS\Factory::getApplication()->getIdentity();
             if ($user->id) {
                 $query->where($db->quoteName('b.user_id') . ' = ' . (int) $user->id);
             } else {
@@ -166,7 +166,7 @@ class ModFbgFlexofficeBookingHelper
      */
     public static function getPersonalBookings()
     {
-        $user = Factory::getUser();
+        $user = \Joomla\CMS\Factory::getApplication()->getIdentity();
         if (!$user->id) {
             return [];
         }

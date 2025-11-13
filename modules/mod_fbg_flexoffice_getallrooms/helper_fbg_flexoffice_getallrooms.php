@@ -16,7 +16,7 @@ class ModFbgFlexofficeGetAllRoomsHelper
             $db = Factory::getDbo();
         }
         $query = $db->getQuery(true)
-            ->select($db->quoteName(['id','name']))
+            ->select($db->quoteName(['id', 'name']))
             ->from($db->quoteName('#__rooms'));
         $db->setQuery($query);
 

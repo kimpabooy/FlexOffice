@@ -12,10 +12,10 @@ use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 
 $app = Factory::getApplication();
-$session = \Joomla\CMS\Factory::getSession();
+$session = Factory::getSession() ?: Factory::getApplication()->getSession(); // use existing session or get from application
 $input = $app->input;
 
-$user = Factory::getUser();
+$user = Factory::getApplication()->getIdentity();
 $isSuperUser = $user->authorise('core.admin');
 
 // Handle booking cancellation
@@ -74,7 +74,7 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
         // Use the DatabaseInterface::class constant so the container lookup matches registration
         $db = Factory::getContainer()->get(DatabaseInterface::class);
     } else {
-        $db = Factory::getDbo();
+        $db = \Joomla\CMS\Factory::getContainer()->get(DatabaseInterface::class);
     }
 
     $query = $db->getQuery(true)
@@ -117,7 +117,7 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
 }
 
 // Fetch data for the view
-$user = Joomla\CMS\Factory::getUser();
+$user = \Joomla\CMS\Factory::getApplication()->getIdentity();
 $isSuperUser = $user->authorise('core.admin');
 // Hämta tillgängliga perioder och bokningar via nya helper
 $available = ModFbgFlexofficeBookingHelper::getAvailable();

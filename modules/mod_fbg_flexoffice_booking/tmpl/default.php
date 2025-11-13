@@ -15,7 +15,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     <?php if ($params->get('show_booking', 1)): ?>
         <h3>Boka skrivbord</h3>
 
-        <?php $user = Factory::getUser(); ?>
+        <?php $user = Factory::getApplication()->getIdentity(); ?>
 
         <?php if (!$user->id): ?>
             <p class="alert alert-warning">Du måste vara inloggad för att boka.</p>
@@ -133,7 +133,6 @@ use Joomla\CMS\HTML\HTMLHelper;
                 var currentPeriodId = null;
 
                 function openModal(data) {
-                    console.log(data); // remove this line in production
                     deskElement.textContent = data.desk || '';
                     roomElement.textContent = data.room || '';
                     locationGroupElement.textContent = data.locationGroup || '';

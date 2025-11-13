@@ -30,7 +30,7 @@ class PersonalDeskService
 
     public static function getCurrentUserId()
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         return isset($user->id) && $user->id ? (int) $user->id : null;
     }
 
@@ -377,7 +377,10 @@ class PersonalDeskService
             }
 
             $app->enqueueMessage('Period(er) sparad.', 'message');
-            $app->redirect($input->server->getString('REQUEST_URI'));
+            $redirectUrl = $input->server->getString('REQUEST_URI');
+            // Use a direct header redirect since the application object may not implement redirect()
+            header('Location: ' . $redirectUrl);
+            exit;
         } catch (\RuntimeException $e) {
             $app->enqueueMessage('Kunde inte spara period(er): ' . $e->getMessage(), 'error');
         }
