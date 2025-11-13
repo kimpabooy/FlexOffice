@@ -4,7 +4,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 
-class ModGetAllRoomsHelper
+class ModFbgFlexofficeGetAllRoomsHelper
 {
     public static function getRooms()
     {

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="4.0" client="site" method="upgrade">
-    <name>mod_getAllRooms</name>
+    <name>mod_fbg_flexoffice_getallrooms</name>
     <author>Developer</author>
+    <creationDate>2025-11-13</creationDate>
     <version>1.0.0</version>
     <description>En enkel test för att skriva ut rum</description>
     <files>
-        <filename module="mod_getAllRooms">mod_getAllRooms.php</filename>
-        <filename>helper.php</filename>
+    <filename module="mod_fbg_flexoffice_getallrooms">mod_fbg_flexoffice_getallrooms.php</filename>
+    <filename>helper_fbg_flexoffice_getallrooms.php</filename>
         <folder>tmpl</folder>
     </files>
     <config></config>
