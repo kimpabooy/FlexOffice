@@ -133,7 +133,6 @@ use Joomla\CMS\HTML\HTMLHelper;
                 var currentPeriodId = null;
 
                 function openModal(data) {
-                    console.log(data); // remove this line in production
                     deskElement.textContent = data.desk || '';
                     roomElement.textContent = data.room || '';
                     locationGroupElement.textContent = data.locationGroup || '';
