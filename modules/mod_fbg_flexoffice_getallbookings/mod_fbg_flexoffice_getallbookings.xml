@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="4.0" client="site" method="upgrade">
+    <name>mod_fbg_flexoffice_getallbookings</name>
+    <author>Developer</author>
+    <creationDate>2025-11-13</creationDate>
+    <version>1.0.0</version>
+    <description>En enkel modul för att lista bokningar (bookings)</description>
+    <files>
+    <filename module="mod_fbg_flexoffice_getallbookings">mod_fbg_flexoffice_getallbookings.php</filename>
+    <filename>helper_fbg_flexoffice_getallbookings.php</filename>
+        <folder>tmpl</folder>
+    </files>
+    <config></config>
+</extension>
