@@ -6,7 +6,7 @@ use Joomla\CMS\Session\Session;
 
 require_once __DIR__ . '/src/PersonalDeskService.php';
 
-class ModPersonalDeskAvailabilityHelper
+class ModFbgFlexofficePersonalDeskAvailabilityHelper
 {
     /**
      * Delegate POST handling to the service layer.
