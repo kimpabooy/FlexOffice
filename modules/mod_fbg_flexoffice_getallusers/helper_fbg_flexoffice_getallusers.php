@@ -16,7 +16,7 @@ class ModFbgFlexofficeGetAllUsersHelper
             $db = Factory::getDbo();
         }
         $query = $db->getQuery(true)
-            ->select($db->quoteName(['id','name','username','email']))
+            ->select($db->quoteName(['id', 'name', 'username', 'email']))
             ->from($db->quoteName('#__users'));
         $db->setQuery($query);
 
