@@ -4,7 +4,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
 
-class ModDeskManagerHelper
+class ModFbgFlexofficeDeskManagerHelper
 {
     public static function process()
     {
@@ -21,11 +21,11 @@ class ModDeskManagerHelper
             return;
         }
 
-    $db = Factory::getDbo();
-    // Use a module-specific task name to avoid interfering with Joomla's global "task" routing
-    $task = $input->post->getString('mod_task');
+        $db = Factory::getDbo();
+        // Use a module-specific task name to avoid interfering with Joomla's global "task" routing
+        $task = $input->post->getString('mod_task');
 
-    try {
+        try {
             switch ($task) {
                 case 'create.location':
                     $name = trim($input->post->getString('location_name'));
@@ -45,7 +45,7 @@ class ModDeskManagerHelper
                         throw new \RuntimeException('Location and Group name are required');
                     }
                     $columns = ['location_id', 'name'];
-                    $values = [ (int) $location_id, $db->quote($name) ];
+                    $values = [(int) $location_id, $db->quote($name)];
                     self::insertWithIdFallback('l5e0b_location_group', $columns, $values);
                     $app->enqueueMessage('Group created', 'message');
                     break;
@@ -58,7 +58,7 @@ class ModDeskManagerHelper
                     }
                     // Table column is `location_group_id` (see DB), use that name here
                     $columns = ['location_group_id', 'name'];
-                    $values = [ (int) $group_id, $db->quote($name) ];
+                    $values = [(int) $group_id, $db->quote($name)];
                     self::insertWithIdFallback('l5e0b_rooms', $columns, $values);
                     $app->enqueueMessage('Room created', 'message');
                     break;
@@ -76,7 +76,7 @@ class ModDeskManagerHelper
                     $userId = isset($user->id) ? (int) $user->id : 0;
                     $availabilityId = 1;
                     $columns = ['room_id', 'desk_availability_period_id', 'user_id'];
-                    $values = [ (int) $room_id, (int) $availabilityId, (int) $userId ];
+                    $values = [(int) $room_id, (int) $availabilityId, (int) $userId];
                     self::insertWithIdFallback('l5e0b_desk', $columns, $values);
                     $app->enqueueMessage('Desk created', 'message');
                     break;
@@ -90,8 +90,9 @@ class ModDeskManagerHelper
         }
 
         // Redirect to avoid resubmission. Use server REQUEST_URI from input to keep routing intact.
-        $app->redirect($app->input->server->getString('REQUEST_URI', ''));
-
+        $uri = $app->input->server->getString('REQUEST_URI', '');
+        header('Location: ' . $uri);
+        exit;
     }
 
     /**
@@ -139,10 +140,10 @@ class ModDeskManagerHelper
                 return;
             }
 
-                // rethrow other errors
-                throw $e;
-            }
+            // rethrow other errors
+            throw $e;
         }
+    }
 
     public static function getLocations()
     {

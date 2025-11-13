@@ -3,19 +3,19 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Session\Session;
 
-$rooms = ModDeskManagerHelper::getRooms();
-$desks = ModDeskManagerHelper::getDesks();
-$groups = ModDeskManagerHelper::getGroups();
-$locations = ModDeskManagerHelper::getLocations();
+$rooms = ModFbgFlexofficeDeskManagerHelper::getRooms();
+$desks = ModFbgFlexofficeDeskManagerHelper::getDesks();
+$groups = ModFbgFlexofficeDeskManagerHelper::getGroups();
+$locations = ModFbgFlexofficeDeskManagerHelper::getLocations();
 
 ?>
 
 <div class="mod-desk-manager">
     <h3>Skapa en ny plats</h3>
     <form method="post">
-        <label>Namn<br><input type="text" name="location_name" required  placeholder="Ange ett namn..."></label><br>
-    <input type="hidden" name="mod_task" value="create.location">
-    <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
+        <label>Namn<br><input type="text" name="location_name" required placeholder="Ange ett namn..."></label><br>
+        <input type="hidden" name="mod_task" value="create.location">
+        <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
         <button type="submit">Skapa plats</button>
     </form>
 
@@ -30,9 +30,9 @@ $locations = ModDeskManagerHelper::getLocations();
                 <?php endforeach; ?>
             </select>
         </label><br>
-        <label>Avdelningsnamn<br><input type="text" name="group_name" required  placeholder="Ange ett namn..."></label><br>
-    <input type="hidden" name="mod_task" value="create.group">
-    <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
+        <label>Avdelningsnamn<br><input type="text" name="group_name" required placeholder="Ange ett namn..."></label><br>
+        <input type="hidden" name="mod_task" value="create.group">
+        <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
         <button type="submit">Skapa avdelning</button>
     </form>
 
@@ -47,9 +47,9 @@ $locations = ModDeskManagerHelper::getLocations();
                 <?php endforeach; ?>
             </select>
         </label><br>
-        <label>Rumsnamn<br><input type="text" name="room_name" required  placeholder="Ange ett rum..."></label><br>
-    <input type="hidden" name="mod_task" value="create.room">
-    <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
+        <label>Rumsnamn<br><input type="text" name="room_name" required placeholder="Ange ett rum..."></label><br>
+        <input type="hidden" name="mod_task" value="create.room">
+        <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
         <button type="submit">Skapa rum</button>
     </form>
 
@@ -72,38 +72,38 @@ $locations = ModDeskManagerHelper::getLocations();
                 <?php endforeach; ?>
             </select>
         </label><br>
-        <label>Skrivbordsnamn<br><input type="text" name="desk_name" required  placeholder="Ange ett skrivbord..."></label><br>
-    <input type="hidden" name="mod_task" value="create.desk">
-    <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
+        <label>Skrivbordsnamn<br><input type="text" name="desk_name" required placeholder="Ange ett skrivbord..."></label><br>
+        <input type="hidden" name="mod_task" value="create.desk">
+        <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
         <button type="submit">Skapa skrivbord</button>
     </form>
 
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const groupSelect = document.getElementById('desk_group_select');
-    const roomSelect = document.getElementById('desk_room_select');
-    const roomOptions = roomSelect.querySelectorAll('option[data-group-id]');
+    document.addEventListener('DOMContentLoaded', function() {
+        const groupSelect = document.getElementById('desk_group_select');
+        const roomSelect = document.getElementById('desk_room_select');
+        const roomOptions = roomSelect.querySelectorAll('option[data-group-id]');
 
-    groupSelect.addEventListener('change', function() {
-        const selectedGroupId = this.value;
-        
-        // Reset room select
-        roomSelect.value = '';
+        groupSelect.addEventListener('change', function() {
+            const selectedGroupId = this.value;
 
-        // Hide all options
-        roomOptions.forEach(function(option) {
-            option.style.display = 'none';
-        });
+            // Reset room select
+            roomSelect.value = '';
 
-        if (selectedGroupId) {
-            // Show options that match the selected group
-            const filteredOptions = roomSelect.querySelectorAll('option[data-group-id="' + selectedGroupId + '"]');
-            filteredOptions.forEach(function(option) {
-                option.style.display = '';
+            // Hide all options
+            roomOptions.forEach(function(option) {
+                option.style.display = 'none';
             });
-        }
+
+            if (selectedGroupId) {
+                // Show options that match the selected group
+                const filteredOptions = roomSelect.querySelectorAll('option[data-group-id="' + selectedGroupId + '"]');
+                filteredOptions.forEach(function(option) {
+                    option.style.display = '';
+                });
+            }
+        });
     });
-});
 </script>
