@@ -4,7 +4,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 
-class ModGetAllDesksHelper
+class ModFbgFlexofficeGetAllDesksHelper
 {
     public static function getDesks()
     {
