@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="4.0" client="site" method="upgrade">
-    <name>mod_desk_availability_period</name>
+    <name>mod_fbg_flexoffice_desk_availability_period</name>
     <author>Auto-generated</author>
+    <creationDate>2025-11-13</creationDate>
     <version>1.0.0</version>
     <description>Visar lediga perioder för skrivbord</description>
 
     <files>
-        <filename module="mod_desk_availability_period">mod_desk_availability_period.php</filename>
-        <filename>helper.php</filename>
+    <filename module="mod_fbg_flexoffice_desk_availability_period">mod_fbg_flexoffice_desk_availability_period.php</filename>
+    <filename>helper_fbg_flexoffice_desk_availability_period.php</filename>
         <folder>tmpl</folder>
     </files>
 

@@ -4,7 +4,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 
-class ModDeskAvailabilityHelper
+class ModFbgFlexofficeDeskAvailabilityPeriodHelper
 {
     public static function getAvailabilityPeriods($limit = 20)
     {
