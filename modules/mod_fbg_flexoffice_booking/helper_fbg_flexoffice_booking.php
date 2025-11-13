@@ -4,7 +4,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 
-class ModBookingHelper
+class ModFbgFlexofficeBookingHelper
 {
     /**
      * Return availability periods from #__desk_availability_period that are not

@@ -2,7 +2,7 @@
 
 /**
  * @package     Joomla.Site
- * @subpackage  mod_booking
+ * @subpackage  mod_fbg_flexoffice_booking
  */
 defined('_JEXEC') or die;
 
@@ -26,7 +26,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         <form method="post" action="" class="mod-booking-form">
             <?= HTMLHelper::_('form.token'); ?>
             <input type="hidden" name="task" value="book" />
-            <input type="hidden" name="period_id" id="mod_booking_period_id" value="" />
+            <input type="hidden" name="period_id" id="mod_fbg_flexoffice_booking_period_id" value="" />
 
             <div>
                 <label for="booking-period"></label>
@@ -92,7 +92,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
                 <?php
                 // Include the calendar fragment (separate layout) so we can re-render only this part via AJAX
-                $layoutPath = \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_booking', 'calendar');
+                $layoutPath = \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_fbg_flexoffice_booking', 'calendar');
                 if ($layoutPath && file_exists($layoutPath)) {
                     include $layoutPath;
                 }
@@ -128,7 +128,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                 var timeElement = document.getElementById('mod-booking-modal-time');
                 var cancelBtn = document.getElementById('mod-booking-modal-cancel');
                 var confirmBtn = document.getElementById('mod-booking-modal-confirm');
-                var periodInput = document.getElementById('mod_booking_period_id');
+                var periodInput = document.getElementById('mod_fbg_flexoffice_booking_period_id');
                 var commentElement = document.getElementById('mod-booking-modal-comment');
                 var currentPeriodId = null;
 

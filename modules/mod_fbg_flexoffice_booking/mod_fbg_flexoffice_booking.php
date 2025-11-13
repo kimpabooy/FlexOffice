@@ -2,11 +2,11 @@
 
 /**
  * @package     Joomla.Site
- * @subpackage  mod_booking
+ * @subpackage  mod_fbg_flexoffice_booking
  */
 defined('_JEXEC') or die;
 
-require_once __DIR__ . '/helper.php';
+require_once __DIR__ . '/helper_fbg_flexoffice_booking.php';
 
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
@@ -37,7 +37,7 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'cancel') {
         exit;
     }
 
-    $helper = new ModBookingHelper;
+    $helper = new ModFbgFlexofficeBookingHelper;
     if ($helper->cancelBooking($bookingId, $user->id, $isSuperUser)) {
         $session->set('mod_booking_message', ['text' => 'Bokningen har avbokats.', 'type' => 'message']);
     } else {
@@ -96,7 +96,7 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
         exit;
     }
 
-    $helper = new ModBookingHelper;
+    $helper = new ModFbgFlexofficeBookingHelper;
     $result = $helper->saveBooking([
         'desk_id' => (int) $period->desk_id,
         'user_id' => (int) $user->id,
@@ -119,9 +119,10 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
 // Fetch data for the view
 $user = Joomla\CMS\Factory::getUser();
 $isSuperUser = $user->authorise('core.admin');
-$available = ModBookingHelper::getAvailable();
-$bookings = ModBookingHelper::getBookings($isSuperUser);
-$personalBookings = ModBookingHelper::getPersonalBookings();
+// Hämta tillgängliga perioder och bokningar via nya helper
+$available = ModFbgFlexofficeBookingHelper::getAvailable();
+$bookings = ModFbgFlexofficeBookingHelper::getBookings($isSuperUser);
+$personalBookings = ModFbgFlexofficeBookingHelper::getPersonalBookings();
 
 
 // Visa eventuellt sparat systemmeddelande från sessionen
@@ -138,7 +139,7 @@ $isAjax = strtolower($app->input->server->getString('HTTP_X_REQUESTED_WITH', '')
 if ($isAjax) {
     // render the calendar fragment (calendar.php layout) and exit
     // Note: getLayoutPath returns a path; include to execute it
-    $layoutPath = \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_booking', 'calendar');
+    $layoutPath = \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_fbg_flexoffice_booking', 'calendar');
     if ($layoutPath && file_exists($layoutPath)) {
         include $layoutPath;
     }
@@ -146,4 +147,4 @@ if ($isAjax) {
     return;
 }
 
-require \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_booking', $layout);
+require \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_fbg_flexoffice_booking', $layout);

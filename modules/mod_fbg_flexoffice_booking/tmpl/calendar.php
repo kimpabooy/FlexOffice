@@ -9,7 +9,7 @@ if (isset($params) && $params->get('show_booking', 1) == 0) {
     return;
 }
 
-// $available is expected to be provided by the module entry (mod_booking.php)
+// $available is expected to be provided by the module entry (mod_fbg_flexoffice_booking.php)
 $user = Factory::getUser();
 
 // Prepare calendar variables (week-based navigation)
