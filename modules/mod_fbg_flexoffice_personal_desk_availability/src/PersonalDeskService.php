@@ -98,7 +98,7 @@ class PersonalDeskService
             }
 
             $q = $db->getQuery(true)
-                ->insert($db->quoteName('#__desk_availability_period'))
+                ->insert($db->quoteName('#__fbgflexoffice_desk_availability_period'))
                 ->columns($insertCols)
                 ->values(implode(',', $vals));
             $db->setQuery($q);
@@ -111,7 +111,7 @@ class PersonalDeskService
 
     public static function runCleanupIfNeeded($db)
     {
-        $deskCols = self::getTableColumns($db, 'desk');
+        $deskCols = self::getTableColumns($db, 'fbgflexoffice_desk');
         if (!in_array('desk_availability_period_id', $deskCols)) {
             return;
         }
@@ -119,13 +119,13 @@ class PersonalDeskService
         try {
             $now = (new \DateTime())->format('Y-m-d H:i:s');
             $cleanup = $db->getQuery(true)
-                ->update($db->quoteName('#__desk'))
+                ->update($db->quoteName('#__fbgflexoffice_desk'))
                 ->set($db->quoteName('desk_availability_period_id') . ' = NULL')
-                ->where($db->quoteName('desk_availability_period_id') . ' IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__desk_availability_period') . ' WHERE ' . $db->quoteName('end_time') . ' IS NOT NULL AND ' . $db->quoteName('end_time') . ' < ' . $db->quote($now) . ')');
+                ->where($db->quoteName('desk_availability_period_id') . ' IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__fbgflexoffice_desk_availability_period') . ' WHERE ' . $db->quoteName('end_time') . ' IS NOT NULL AND ' . $db->quoteName('end_time') . ' < ' . $db->quote($now) . ')');
             $db->setQuery($cleanup);
             $db->execute();
         } catch (\RuntimeException $e) {
-            Log::add('Cleanup failed for #__desk: ' . $e->getMessage(), Log::ERROR, 'mod_personal_desk_availability');
+            Log::add('Cleanup failed for #__fbgflexoffice_desk: ' . $e->getMessage(), Log::ERROR, 'mod_personal_desk_availability');
         }
     }
 
@@ -146,8 +146,8 @@ class PersonalDeskService
                 $db->quoteName('d.id'),
                 $db->quoteName('r.name') . ' AS ' . $db->quoteName('room_name'),
             ])
-            ->from($db->quoteName('#__desk', 'd'))
-            ->join('LEFT', $db->quoteName('#__rooms', 'r') . ' ON ' . $db->quoteName('r.id') . ' = ' . $db->quoteName('d.room_id'))
+            ->from($db->quoteName('#__fbgflexoffice_desk', 'd'))
+            ->join('LEFT', $db->quoteName('#__fbgflexoffice_room', 'r') . ' ON ' . $db->quoteName('r.id') . ' = ' . $db->quoteName('d.room_id'))
             ->order($db->quoteName('d.id'));
 
         // Only show desks that belong to the currently logged-in user
@@ -175,7 +175,7 @@ class PersonalDeskService
     {
         $db = self::getDbInstance();
 
-        $tableCols = self::getTableColumns($db, 'desk_availability_period');
+        $tableCols = self::getTableColumns($db, 'fbgflexoffice_desk_availability_period');
         if (empty($tableCols)) {
             return [];
         }
@@ -189,21 +189,21 @@ class PersonalDeskService
 
         $query = $db->getQuery(true)
             ->select($selectCols)
-            ->from($db->quoteName('#__desk_availability_period', 'p'));
+            ->from($db->quoteName('#__fbgflexoffice_desk_availability_period', 'p'));
 
         $deskJoinUsed = false;
-        $deskCols = self::getTableColumns($db, 'desk');
+        $deskCols = self::getTableColumns($db, 'fbgflexoffice_desk');
 
         if (in_array('desk_id', $tableCols)) {
-            $query->join('LEFT', $db->quoteName('#__desk', 'd') . ' ON d.id = p.desk_id');
+            $query->join('LEFT', $db->quoteName('#__fbgflexoffice_desk', 'd') . ' ON d.id = p.desk_id');
             $deskJoinUsed = true;
         } elseif (in_array('desk_availability_period_id', $deskCols)) {
-            $query->join('LEFT', $db->quoteName('#__desk', 'd') . ' ON d.desk_availability_period_id = p.id');
+            $query->join('LEFT', $db->quoteName('#__fbgflexoffice_desk', 'd') . ' ON d.desk_availability_period_id = p.id');
             $deskJoinUsed = true;
         }
 
         if ($deskJoinUsed) {
-            $query->join('LEFT', $db->quoteName('#__rooms', 'r') . ' ON r.id = d.room_id');
+            $query->join('LEFT', $db->quoteName('#__fbgflexoffice_room', 'r') . ' ON r.id = d.room_id');
             $query->select($db->quoteName('r.name') . ' AS ' . $db->quoteName('room_name'));
             if (!in_array('p.' . $db->quoteName('desk_id'), $selectCols)) {
                 $query->select('d.' . $db->quoteName('id') . ' AS ' . $db->quoteName('desk_id'));
@@ -299,7 +299,7 @@ class PersonalDeskService
         $userId = self::getCurrentUserId();
 
         // Hämta vilka kolumner som faktiskt finns i availability-tabellen
-        $tableCols = self::getTableColumns($db, 'desk_availability_period');
+        $tableCols = self::getTableColumns($db, 'fbgflexoffice_desk_availability_period');
         if (empty($tableCols)) {
             $app->enqueueMessage('Databas-tabellen för availability kunde inte läsas eller saknar kolumner.', 'error');
             return;
@@ -342,7 +342,7 @@ class PersonalDeskService
             }
 
             // Inspect desk table columns to determine whether we can set desk_availability_period_id
-            $deskCols = self::getTableColumns($db, 'desk');
+            $deskCols = self::getTableColumns($db, 'fbgflexoffice_desk');
 
             // Determine the first occurrence. For weekday mode: find the first date on/after
             // the provided start date that matches that weekday (1=Mon..7=Sun). Otherwise use start date.
@@ -366,7 +366,7 @@ class PersonalDeskService
                 try {
                     $firstId = (int) $insertedIds[0];
                     $update = $db->getQuery(true)
-                        ->update($db->quoteName('#__desk'))
+                        ->update($db->quoteName('#__fbgflexoffice_desk'))
                         ->set($db->quoteName('desk_availability_period_id') . ' = ' . $db->quote($firstId))
                         ->where($db->quoteName('id') . ' = ' . (int) $deskId);
                     $db->setQuery($update);

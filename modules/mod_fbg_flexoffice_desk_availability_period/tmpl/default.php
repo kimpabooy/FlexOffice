@@ -9,15 +9,36 @@ defined('_JEXEC') or die;
         <p>Inga lediga skrivbord hittades.</p>
     <?php else : ?>
         <style>
-            .dap-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
-            .dap-item { border: 1px solid #e1e1e1; padding: 0.75rem; border-radius: 6px; display: flex; flex-direction: column; }
-            .dap-title { font-weight: 600; margin-bottom: 0.25rem; }
-            .dap-meta { color: #666; font-size: 0.95rem; }
+            .dap-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                gap: 0.5rem;
+            }
+
+            .dap-item {
+                border: 1px solid #e1e1e1;
+                padding: 0.75rem;
+                border-radius: 6px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .dap-title {
+                font-weight: 600;
+                margin-bottom: 0.25rem;
+            }
+
+            .dap-meta {
+                color: #666;
+                font-size: 0.95rem;
+            }
         </style>
 
         <ul class="dap-list">
-        <?php foreach ($periods as $p) : ?>
-            <?php
+            <?php foreach ($periods as $p) : ?>
+                <?php
                 // Defensive helpers
                 // Only treat a value as a desk id if the helper provided it in desk_id.
                 // Do NOT fall back to the period id (that was causing incorrect #numbers).
@@ -27,7 +48,7 @@ defined('_JEXEC') or die;
                 $createdBy = isset($p->created_by_name) ? htmlspecialchars($p->created_by_name, ENT_QUOTES, 'UTF-8') : (isset($p->created_by) ? htmlspecialchars($p->created_by, ENT_QUOTES, 'UTF-8') : '');
 
                 // Date formatting with Swedish short month names
-                $swMonths = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+                $swMonths = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
                 $fmt = function ($dt) use ($swMonths) {
                     if (empty($dt)) return '';
                     $ts = strtotime($dt);
@@ -40,36 +61,36 @@ defined('_JEXEC') or die;
                 };
                 $from = $fmt($p->start_time ?? $p->start_datetime ?? '');
                 $to = $fmt($p->end_time ?? $p->end_datetime ?? '');
-            ?>
-            <li class="dap-item">
-                <div class="dap-title">
-                    <?php if ($deskId !== null) : ?>
-                        <?php echo 'Skrivbord #' . $deskId; ?>
-                        <?php if ($room) : ?>
-                            <?php echo ' — i ' . $room; ?>
-                        <?php endif; ?>
-                    <?php else : ?>
-                        <?php echo $label ?: ('Period #' . ((int) ($p->id ?? 0))); ?>
-                    <?php endif; ?>
-                </div>
-                <div class="dap-meta">
-                    <?php if ($label) : ?>
-                        <div><?php echo $label; ?></div>
-                    <?php endif; ?>
-                    <div>
-                        <?php if ($from) : ?>
-                            Finns tillgänglig <?php echo $from; ?>
-                            <?php if ($to) : ?> — <?php echo $to; ?><?php endif; ?>
+                ?>
+                <li class="dap-item">
+                    <div class="dap-title">
+                        <?php if ($deskId !== null) : ?>
+                            <?php echo 'Skrivbord #' . $deskId; ?>
+                            <?php if ($room) : ?>
+                                <?php echo ' — i ' . $room; ?>
+                            <?php endif; ?>
                         <?php else : ?>
-                            Tid ej angiven
+                            <?php echo $label ?: ('Period #' . ((int) ($p->id ?? 0))); ?>
                         <?php endif; ?>
                     </div>
-                    <?php if ($createdBy) : ?>
-                        <div>Skapad av <?php echo $createdBy; ?></div>
-                    <?php endif; ?>
-                </div>
-            </li>
-        <?php endforeach; ?>
+                    <div class="dap-meta">
+                        <?php if ($label) : ?>
+                            <div><?php echo $label; ?></div>
+                        <?php endif; ?>
+                        <div>
+                            <?php if ($from) : ?>
+                                Finns tillgänglig <?php echo $from; ?>
+                                <?php if ($to) : ?> — <?php echo $to; ?><?php endif; ?>
+                                <?php else : ?>
+                                    Tid ej angiven
+                                <?php endif; ?>
+                        </div>
+                        <?php if ($createdBy) : ?>
+                            <div>Skapad av <?php echo $createdBy; ?></div>
+                        <?php endif; ?>
+                    </div>
+                </li>
+            <?php endforeach; ?>
         </ul>
     <?php endif; ?>
 </div>

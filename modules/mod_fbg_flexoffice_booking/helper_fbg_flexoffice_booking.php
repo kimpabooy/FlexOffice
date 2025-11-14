@@ -29,11 +29,11 @@ class ModFbgFlexofficeBookingHelper
                 $db->quoteName('lg.name') . ' AS ' . $db->quoteName('location_group_name'),
                 $db->quoteName('l.name') . ' AS ' . $db->quoteName('location_name')
             ])
-            ->from($db->quoteName('#__desk_availability_period', 'p'))
-            ->join('LEFT', $db->quoteName('#__desk', 'd') . ' ON d.id = p.desk_id')
-            ->join('LEFT', $db->quoteName('#__rooms', 'r') . ' ON r.id = d.room_id')
-            ->join('LEFT', $db->quoteName('#__location_group', 'lg') . ' ON lg.id = r.location_group_id')
-            ->join('LEFT', $db->quoteName('#__location', 'l') . ' ON l.id = lg.location_id')
+            ->from($db->quoteName('#__fbgflexoffice_desk_availability_period', 'p'))
+            ->join('LEFT', $db->quoteName('#__fbgflexoffice_desk', 'd') . ' ON d.id = p.desk_id')
+            ->join('LEFT', $db->quoteName('#__fbgflexoffice_room', 'r') . ' ON r.id = d.room_id')
+            ->join('LEFT', $db->quoteName('#__fbgflexoffice_location_group', 'lg') . ' ON lg.id = r.location_group_id')
+            ->join('LEFT', $db->quoteName('#__fbgflexoffice_location', 'l') . ' ON l.id = lg.location_id')
             // Exclude placeholder rows where both start_time and end_time are NULL
             ->where('(' . $db->quoteName('p.start_time') . ' IS NOT NULL OR ' . $db->quoteName('p.end_time') . ' IS NOT NULL)')
             ->where('(p.' . $db->quoteName('end_time') . ' IS NULL OR p.' . $db->quoteName('end_time') . ' >= ' . $db->quote($now) . ')');
@@ -41,7 +41,7 @@ class ModFbgFlexofficeBookingHelper
         // Exclude already booked periods (overlapping bookings for same desk)
         $sub = $db->getQuery(true)
             ->select('1')
-            ->from($db->quoteName('#__booking', 'b'))
+            ->from($db->quoteName('#__fbgflexoffice_booking', 'b'))
             ->where('b.' . $db->quoteName('desk_id') . ' = p.' . $db->quoteName('desk_id'))
             ->where('(' .
                 'b.' . $db->quoteName('start_time') . ' < COALESCE(p.' . $db->quoteName('end_time') . ', ' . $db->quote('9999-12-31 23:59:59') . ')' .
@@ -78,7 +78,7 @@ class ModFbgFlexofficeBookingHelper
         // Select bookings and join to users to fetch display name for nicer output
         $query = $db->getQuery(true)
             ->select(['b.*', $db->quoteName('u.name') . ' AS ' . $db->quoteName('user_name')])
-            ->from($db->quoteName('#__booking', 'b'))
+            ->from($db->quoteName('#__fbgflexoffice_booking', 'b'))
             ->join('LEFT', $db->quoteName('#__users', 'u') . ' ON u.id = b.user_id')
             ->where('(b.' . $db->quoteName('end_time') . ' IS NULL OR b.' . $db->quoteName('end_time') . ' >= ' . $db->quote($now) . ')')
             ->order('b.start_time ASC');
@@ -124,7 +124,7 @@ class ModFbgFlexofficeBookingHelper
         // Check conflicts
         $subQ = $db->getQuery(true)
             ->select('COUNT(1)')
-            ->from($db->quoteName('#__booking', 'b'))
+            ->from($db->quoteName('#__fbgflexoffice_booking', 'b'))
             ->where('b.' . $db->quoteName('desk_id') . ' = ' . (int) $booking['desk_id'])
             ->where('(' .
                 'b.' . $db->quoteName('start_time') . ' < ' . $db->quote($endTime ?: '9999-12-31 23:59:59') .
@@ -146,7 +146,7 @@ class ModFbgFlexofficeBookingHelper
         $values = [(int) $booking['desk_id'], (int) $booking['user_id'], $db->quote($booking['start_time']), $endTime ? $db->quote($endTime) : 'NULL'];
 
         $query = $db->getQuery(true)
-            ->insert($db->quoteName('#__booking'))
+            ->insert($db->quoteName('#__fbgflexoffice_booking'))
             ->columns(array_map([$db, 'quoteName'], $columns))
             ->values(implode(',', $values));
 
@@ -181,7 +181,7 @@ class ModFbgFlexofficeBookingHelper
 
         $query = $db->getQuery(true)
             ->select(['b.*', $db->quoteName('u.name') . ' AS ' . $db->quoteName('user_name')])
-            ->from($db->quoteName('#__booking', 'b'))
+            ->from($db->quoteName('#__fbgflexoffice_booking', 'b'))
             ->join('LEFT', $db->quoteName('#__users', 'u') . ' ON u.id = b.user_id')
             ->where('b.user_id = ' . (int) $user->id)
             ->where('(b.' . $db->quoteName('end_time') . ' IS NULL OR b.' . $db->quoteName('end_time') . ' >= ' . $db->quote($now) . ')')
@@ -212,7 +212,7 @@ class ModFbgFlexofficeBookingHelper
         }
 
         $query = $db->getQuery(true)
-            ->delete($db->quoteName('#__booking'))
+            ->delete($db->quoteName('#__fbgflexoffice_booking'))
             ->where($db->quoteName('id') . ' = ' . $bookingId);
 
         if (!$isSuperUser) {

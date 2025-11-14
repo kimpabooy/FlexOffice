@@ -171,7 +171,6 @@ use Joomla\CMS\Session\Session;
                 });
             })();
         </script>
-
         <button type="submit">Spara</button>
     </form>
 </div>

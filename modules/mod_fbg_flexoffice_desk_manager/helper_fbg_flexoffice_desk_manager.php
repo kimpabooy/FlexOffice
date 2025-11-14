@@ -35,7 +35,7 @@ class ModFbgFlexofficeDeskManagerHelper
                     }
                     $columns = ['name'];
                     $values = [$db->quote($name)];
-                    self::insertWithIdFallback('l5e0b_location', $columns, $values);
+                    self::insertWithIdFallback('l5e0b__fbgflexoffice_location', $columns, $values);
                     $app->enqueueMessage('Location created', 'message');
                     break;
 
@@ -47,7 +47,7 @@ class ModFbgFlexofficeDeskManagerHelper
                     }
                     $columns = ['location_id', 'name'];
                     $values = [(int) $location_id, $db->quote($name)];
-                    self::insertWithIdFallback('l5e0b_location_group', $columns, $values);
+                    self::insertWithIdFallback('l5e0b_fbgflexoffice_location_group', $columns, $values);
                     $app->enqueueMessage('Group created', 'message');
                     break;
 
@@ -60,7 +60,7 @@ class ModFbgFlexofficeDeskManagerHelper
                     // Table column is `location_group_id` (see DB), use that name here
                     $columns = ['location_group_id', 'name'];
                     $values = [(int) $group_id, $db->quote($name)];
-                    self::insertWithIdFallback('l5e0b_rooms', $columns, $values);
+                    self::insertWithIdFallback('l5e0b_fbgflexoffice_room', $columns, $values);
                     $app->enqueueMessage('Room created', 'message');
                     break;
 
@@ -78,7 +78,7 @@ class ModFbgFlexofficeDeskManagerHelper
                     $availabilityId = 1;
                     $columns = ['room_id', 'desk_availability_period_id', 'user_id'];
                     $values = [(int) $room_id, (int) $availabilityId, (int) $userId];
-                    self::insertWithIdFallback('l5e0b_desk', $columns, $values);
+                    self::insertWithIdFallback('l5e0b_fbgflexoffice_desk', $columns, $values);
                     $app->enqueueMessage('Desk created', 'message');
                     break;
 
@@ -151,7 +151,7 @@ class ModFbgFlexofficeDeskManagerHelper
         $db = Factory::getDbo();
         $query = $db->getQuery(true)
             ->select('*')
-            ->from($db->quoteName('l5e0b_location'));
+            ->from($db->quoteName('l5e0b_fbgflexoffice_location'));
         $db->setQuery($query);
         return $db->loadObjectList();
     }
@@ -161,7 +161,7 @@ class ModFbgFlexofficeDeskManagerHelper
         $db = Factory::getDbo();
         $query = $db->getQuery(true)
             ->select('*')
-            ->from($db->quoteName('l5e0b_location_group'));
+            ->from($db->quoteName('l5e0b_fbgflexoffice_location_group'));
         if ($locationId > 0) {
             $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
         }
@@ -174,7 +174,7 @@ class ModFbgFlexofficeDeskManagerHelper
         $db = Factory::getDbo();
         $query = $db->getQuery(true)
             ->select('*')
-            ->from($db->quoteName('l5e0b_rooms'));
+            ->from($db->quoteName('l5e0b_fbgflexoffice_room'));
         if ($groupId > 0) {
             // column is location_group_id in DB
             $query->where($db->quoteName('location_group_id') . ' = ' . (int) $groupId);
@@ -188,7 +188,7 @@ class ModFbgFlexofficeDeskManagerHelper
         $db = Factory::getDbo();
         $query = $db->getQuery(true)
             ->select('*')
-            ->from($db->quoteName('l5e0b_desk'));
+            ->from($db->quoteName('l5e0b_fbgflexoffice_desk'));
         if ($roomId > 0) {
             $query->where($db->quoteName('room_id') . ' = ' . (int) $roomId);
         }

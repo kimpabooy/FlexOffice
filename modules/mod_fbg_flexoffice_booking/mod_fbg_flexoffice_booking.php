@@ -79,7 +79,7 @@ if ($input->getMethod() === 'POST' && $input->get('task') === 'book') {
 
     $query = $db->getQuery(true)
         ->select('*')
-        ->from($db->quoteName('#__desk_availability_period'))
+        ->from($db->quoteName('#__fbgflexoffice_desk_availability_period'))
         ->where($db->quoteName('id') . ' = ' . (int) $periodId);
     $db->setQuery($query);
 
