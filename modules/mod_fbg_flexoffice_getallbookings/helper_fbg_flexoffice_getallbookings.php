@@ -25,7 +25,7 @@ class ModFbgFlexofficeGetAllBookingsHelper
                 $db->quoteName('b.end_time'),
                 $db->quoteName('u.name') . ' AS ' . $db->quoteName('user_name'),
             ])
-            ->from($db->quoteName('#__booking', 'b'))
+            ->from($db->quoteName('#__fbgflexoffice_booking', 'b'))
             ->join('LEFT', $db->quoteName('#__users', 'u') . ' ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('b.user_id'));
 
         $db->setQuery($query);

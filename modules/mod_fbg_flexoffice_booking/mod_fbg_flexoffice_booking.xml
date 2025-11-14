@@ -13,8 +13,8 @@
     <config>
         <fields name="params">
             <fieldset name="basic">
-                <field name="booking_table" type="text" default="#__booking" label="Booking table" description="Database table for bookings (use #__ prefix)." />
-                <field name="availability_table" type="text" default="#__desk_availability_period" label="Availability table" description="Table that contains available periods (use #__ prefix)." />
+                <field name="booking_table" type="text" default="#__fbgflexoffice_booking" label="Booking table" description="Database table for bookings (use #__ prefix)." />
+                <field name="availability_table" type="text" default="#__fbgflexoffice_desk_availability_period" label="Availability table" description="Table that contains available periods (use #__ prefix)." />
                 <!-- New display toggles: allow site admin to show/hide parts of the module -->
                 <field name="show_booking" type="radio" default="1" label="Visa bokningsformulär" description="Visa eller dölj bokningsformuläret och kalendern i modulen.">
                     <option value="1">Visa</option>

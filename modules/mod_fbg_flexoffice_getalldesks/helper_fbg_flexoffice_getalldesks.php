@@ -21,8 +21,8 @@ class ModFbgFlexofficeGetAllDesksHelper
                 $db->quoteName('d.id'),
                 $db->quoteName('r.name') . ' AS ' . $db->quoteName('room_name'),
             ])
-            ->from($db->quoteName('#__desk', 'd'))
-            ->join('LEFT', $db->quoteName('#__rooms', 'r') . ' ON ' . $db->quoteName('r.id') . ' = ' . $db->quoteName('d.room_id'))
+            ->from($db->quoteName('#__fbgflexoffice_desk', 'd'))
+            ->join('LEFT', $db->quoteName('#__fbgflexoffice_room', 'r') . ' ON ' . $db->quoteName('r.id') . ' = ' . $db->quoteName('d.room_id'))
             ->order($db->quoteName('d.id'));
 
         $db->setQuery($query);

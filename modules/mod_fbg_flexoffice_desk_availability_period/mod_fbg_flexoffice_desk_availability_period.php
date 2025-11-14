@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    Joomla.Site
  * @subpackage mod_fbg_flexoffice_desk_availability_period
