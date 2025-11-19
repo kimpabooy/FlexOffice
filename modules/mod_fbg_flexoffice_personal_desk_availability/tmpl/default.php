@@ -76,8 +76,6 @@ use Joomla\CMS\Session\Session;
                 <option value="3">Onsdag</option>
                 <option value="4">Torsdag</option>
                 <option value="5">Fredag</option>
-                <option value="6">Lördag</option>
-                <option value="7">Söndag</option>
             </select>
             <label for="repeat_count">Antal veckor</label>
             <input type="number" name="repeat_count" id="repeat_count" min="1" value="1" style="width:5em;">
