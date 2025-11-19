@@ -76,8 +76,6 @@ use Joomla\CMS\Session\Session;
                 <option value="3">Onsdag</option>
                 <option value="4">Torsdag</option>
                 <option value="5">Fredag</option>
-                <option value="6">Lördag</option>
-                <option value="7">Söndag</option>
             </select>
             <label for="repeat_count">Antal veckor</label>
             <input type="number" name="repeat_count" id="repeat_count" min="1" value="1" style="width:5em;">
@@ -147,27 +145,47 @@ use Joomla\CMS\Session\Session;
                 if (!form) return;
 
                 form.addEventListener('submit', function(e) {
+                    e.preventDefault();
                     // If weekday mode is selected, ensure a weekday is chosen
                     var modeWeek = document.getElementById('mode_weekday');
                     if (modeWeek && modeWeek.checked) {
                         var rw = document.getElementById('repeat_weekday');
                         if (rw && parseInt(rw.value, 10) === 0) {
-                            // show a user-visible message and prevent submit
                             alert('Vänligen välj en veckodag.');
-                            e.preventDefault();
                             return false;
                         }
                     }
 
-                    // Disable submit button to avoid accidental double submits
                     var btn = form.querySelector('button[type="submit"]');
                     if (btn) {
                         btn.disabled = true;
                         btn.textContent = 'Sparar...';
                     }
-                    // allow normal submit to proceed
-                }, {
-                    passive: false
+
+                    var data = new FormData(form);
+                    fetch('index.php?option=com_ajax&module=fbg_flexoffice_personal_desk_availability&method=save&format=json', {
+                            method: 'POST',
+                            body: data,
+                            credentials: 'same-origin'
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            alert(result.message || 'Skrivbordstid sparad!');
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.textContent = 'Spara';
+                            }
+                            //uppdaterar UI
+                            location.reload();
+
+                        })
+                        .catch(err => {
+                            alert('Fel vid AJAX: ' + err);
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.textContent = 'Spara';
+                            }
+                        });
                 });
             })();
         </script>

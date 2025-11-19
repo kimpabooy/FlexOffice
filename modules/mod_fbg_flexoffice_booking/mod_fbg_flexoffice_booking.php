@@ -135,6 +135,10 @@ if ($bookingMessage && !empty($bookingMessage['text'])) {
 $layout = $params->get('layout', 'default');
 
 // If this is an AJAX request for a different week, render only the calendar fragment
+
+$calendarData = ModFbgFlexofficeBookingHelper::getCalendarData($available, $input->getString('start', null));
+extract($calendarData);
+
 $isAjax = strtolower($app->input->server->getString('HTTP_X_REQUESTED_WITH', '')) === 'xmlhttprequest' && $input->getString('start', '') !== '';
 if ($isAjax) {
     // render the calendar fragment (calendar.php layout) and exit

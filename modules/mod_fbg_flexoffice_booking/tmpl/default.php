@@ -31,67 +31,19 @@ use Joomla\CMS\HTML\HTMLHelper;
             <div>
                 <label for="booking-period"></label>
                 <?php
-                // Prepare calendar variables
+                // Hämta start-parametern
                 $input = Factory::getApplication()->input;
-                $month = $input->getInt('m', (int) date('n'));
-                $year = $input->getInt('y', (int) date('Y'));
-
-                if ($month < 1) {
-                    $month = 1;
-                }
-                if ($month > 12) {
-                    $month = 12;
-                }
-
-                $periodsByDay = [];
-                // Prepare calendar variables (week-based navigation)
-                $input = Factory::getApplication()->input;
-                // Prefer POST 'start' when navigation is done via AJAX POST; fall back to GET query param
-                $startParam = $input->post->getString('start', ''); // expected format YYYY-MM-DD
+                $startParam = $input->post->getString('start', '');
                 if (!$startParam) {
                     $startParam = $input->getString('start', '');
                 }
 
-                // build periods by day
-                $periodsByDay = [];
-                if (!empty($available) && is_array($available)) {
-                    foreach ($available as $p) {
-                        if (empty($p->start_time)) continue;
-                        $ts = strtotime($p->start_time);
-                        $d = date('Y-m-d', $ts);
-                        $periodsByDay[$d][] = $p;
-                    }
-                }
+                // Hämta kalenderdata från hjälparen
+                $calendarData = ModFbgFlexofficeBookingHelper::getCalendarData($available, $startParam);
+                // Gör variabler tillgängliga för calendar.php
+                extract($calendarData);
 
-                $firstDayTs = strtotime("{$year}-{$month}-01");
-                $daysInMonth = (int) date('t', $firstDayTs);
-                $startWeekday = (int) date('N', $firstDayTs); // 1 (Mon) - 7 (Sun)
-                $dayOfWeek = date('n', $firstDayTs - 1);
-
-                // Determine current week's Monday timestamp based on startParam or today
-                if ($startParam && strtotime($startParam) !== false) {
-                    $refTs = strtotime($startParam);
-                } else {
-                    $refTs = time();
-                }
-                $dayOfWeek = (int) date('N', $refTs); // 1 (Mon) - 7 (Sun)
-                $mondayTs = strtotime('-' . ($dayOfWeek - 1) . ' days', $refTs);
-
-                // Prev/Next move by one week
-                $prevTs = strtotime('-7 days', $mondayTs);
-                $nextTs = strtotime('+7 days', $mondayTs);
-
-                // Do not allow navigating earlier than the current week's Monday
-                $minMondayTs = strtotime('monday this week');
-                $showPrev = ($prevTs >= $minMondayTs);
-
-                // Display label for current week
-                $weekStartLabel = htmlspecialchars(date('j M Y', $mondayTs), ENT_QUOTES, 'UTF-8');
-                $weekEndLabel = htmlspecialchars(date('j M Y', strtotime('+6 days', $mondayTs)), ENT_QUOTES, 'UTF-8');
-                ?>
-
-                <?php
-                // Include the calendar fragment (separate layout) so we can re-render only this part via AJAX
+                // Inkludera kalenderlayout
                 $layoutPath = \Joomla\CMS\Helper\ModuleHelper::getLayoutPath('mod_fbg_flexoffice_booking', 'calendar');
                 if ($layoutPath && file_exists($layoutPath)) {
                     include $layoutPath;

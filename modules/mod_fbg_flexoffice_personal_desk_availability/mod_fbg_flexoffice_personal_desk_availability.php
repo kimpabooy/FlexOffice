@@ -7,7 +7,7 @@
 
 defined('_JEXEC') or die;
 
-require_once __DIR__ . '/helper_fbg_flexoffice_personal_desk_availability.php';
+require_once __DIR__ . '/helper.php';
 
 // Hantera eventuell POST
 ModFbgFlexofficePersonalDeskAvailabilityHelper::handleRequest();

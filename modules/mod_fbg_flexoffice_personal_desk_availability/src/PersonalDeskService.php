@@ -233,20 +233,24 @@ class PersonalDeskService
         }
     }
 
-    /**
-     * Handle POST request from module form. Moved from helper for better separation.
-     */
-    public static function handleRequest()
+
+    public static function handleRequest($ajax = false)
     {
         $app = Factory::getApplication();
         $input = $app->input;
 
         // Only handle POST requests with the correct task
         if ($input->getMethod() !== 'POST' || $input->getCmd('task') !== 'personaldesk.save') {
+            if ($ajax) {
+                return ['success' => false, 'message' => 'Felaktig metod eller task'];
+            }
             return;
         }
 
         if (!Session::checkToken('post')) {
+            if ($ajax) {
+                return ['success' => false, 'message' => 'Felaktig token.'];
+            }
             $app->enqueueMessage('Felaktig token.', 'error');
             return;
         }
@@ -265,22 +269,34 @@ class PersonalDeskService
 
         // Basic validation depending on mode
         if (!$deskId) {
+            if ($ajax) {
+                return ['success' => false, 'message' => 'Ange skrivbord.'];
+            }
             $app->enqueueMessage('Ange skrivbord.', 'warning');
             return;
         }
 
         if ($mode === 'range') {
             if (!$startDate || !$startTime) {
+                if ($ajax) {
+                    return ['success' => false, 'message' => 'Ange startdatum och starttid för intervallet.'];
+                }
                 $app->enqueueMessage('Ange startdatum och starttid för intervallet.', 'warning');
                 return;
             }
         } else {
             // weekday mode: require at least a reference start date and a valid weekday selection
             if (!$startDate) {
+                if ($ajax) {
+                    return ['success' => false, 'message' => 'Ange referensdatum för upprepningen.'];
+                }
                 $app->enqueueMessage('Ange referensdatum för upprepningen.', 'warning');
                 return;
             }
             if ($repeatWeekday < 1 || $repeatWeekday > 7) {
+                if ($ajax) {
+                    return ['success' => false, 'message' => 'Vänligen välj en giltig veckodag för upprepning.'];
+                }
                 $app->enqueueMessage('Vänligen välj en giltig veckodag för upprepning.', 'warning');
                 return;
             }
@@ -301,18 +317,27 @@ class PersonalDeskService
         // Hämta vilka kolumner som faktiskt finns i availability-tabellen
         $tableCols = self::getTableColumns($db, 'fbgflexoffice_desk_availability_period');
         if (empty($tableCols)) {
+            if ($ajax) {
+                return ['success' => false, 'message' => 'Databas-tabellen för availability kunde inte läsas eller saknar kolumner.'];
+            }
             $app->enqueueMessage('Databas-tabellen för availability kunde inte läsas eller saknar kolumner.', 'error');
             return;
         }
 
         $insertCols = self::buildInsertColumns($db, $tableCols);
         if (empty($insertCols)) {
+            if ($ajax) {
+                return ['success' => false, 'message' => 'Inga kända kolumner att skriva till i availability-tabellen.'];
+            }
             $app->enqueueMessage('Inga kända kolumner att skriva till i availability-tabellen.', 'error');
             return;
         }
 
         // Kontrollera att vi åtminstone har start_time eller name
         if (!in_array('start_time', $tableCols) && !in_array('name', $tableCols)) {
+            if ($ajax) {
+                return ['success' => false, 'message' => 'Tabellen saknar både start_time och name - inget att spara.'];
+            }
             $app->enqueueMessage('Tabellen saknar både start_time och name - inget att spara.', 'error');
             return;
         }
@@ -324,6 +349,9 @@ class PersonalDeskService
             if ($mode === 'weekday') {
                 // Weekday mode: full work day 08:00 - 17:00
                 if ($repeatWeekday < 1 || $repeatWeekday > 7) {
+                    if ($ajax) {
+                        return ['success' => false, 'message' => 'Vänligen välj en giltig veckodag för upprepning.'];
+                    }
                     $app->enqueueMessage('Vänligen välj en giltig veckodag för upprepning.', 'warning');
                     return;
                 }
@@ -372,16 +400,25 @@ class PersonalDeskService
                     $db->setQuery($update);
                     $db->execute();
                 } catch (\RuntimeException $e) {
+                    if ($ajax) {
+                        return ['success' => true, 'message' => 'Period(er) sparad, men kunde inte uppdatera skrivbordet: ' . $e->getMessage()];
+                    }
                     $app->enqueueMessage('Sparat period(er), men kunde inte uppdatera skrivbordet: ' . $e->getMessage(), 'warning');
                 }
             }
 
+            if ($ajax) {
+                return ['success' => true, 'message' => 'Period(er) sparad.'];
+            }
             $app->enqueueMessage('Period(er) sparad.', 'message');
             $redirectUrl = $input->server->getString('REQUEST_URI');
             // Use a direct header redirect since the application object may not implement redirect()
             header('Location: ' . $redirectUrl);
             exit;
         } catch (\RuntimeException $e) {
+            if ($ajax) {
+                return ['success' => false, 'message' => 'Kunde inte spara period(er): ' . $e->getMessage()];
+            }
             $app->enqueueMessage('Kunde inte spara period(er): ' . $e->getMessage(), 'error');
         }
     }
