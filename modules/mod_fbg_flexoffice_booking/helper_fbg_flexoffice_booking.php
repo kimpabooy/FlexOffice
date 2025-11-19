@@ -7,6 +7,70 @@ use Joomla\Database\DatabaseInterface;
 class ModFbgFlexofficeBookingHelper
 {
     /**
+     * Kalenderlogik: Veckonavigering, perioder per dag, endast vardagar (mån-fre)
+     *
+     * @param array $available Periodobjekt från getAvailable()
+     * @param string|null $startParam Startdatum för veckan (YYYY-MM-DD)
+     * @return array
+     */
+    public static function getCalendarData($available, $startParam = null)
+    {
+        // Bygg perioder per dag
+        $periodsByDay = [];
+        if (!empty($available) && is_array($available)) {
+            foreach ($available as $p) {
+                if (empty($p->start_time)) continue;
+                $ts = strtotime($p->start_time);
+                $d = date('Y-m-d', $ts);
+                $periodsByDay[$d][] = $p;
+            }
+        }
+
+        // Veckonavigering
+        if ($startParam && strtotime($startParam) !== false) {
+            $refTs = strtotime($startParam);
+        } else {
+            $refTs = time();
+        }
+        $dayOfWeek = (int) date('N', $refTs); // 1 (Mon) - 7 (Sun)
+        $mondayTs = strtotime('-' . ($dayOfWeek - 1) . ' days', $refTs);
+
+        // Prev/Next move by one week
+        $prevTs = strtotime('-7 days', $mondayTs);
+        $nextTs = strtotime('+7 days', $mondayTs);
+
+        // Do not allow navigating earlier than den här veckans måndag
+        $minMondayTs = strtotime('monday this week');
+        $showPrev = ($prevTs >= $minMondayTs);
+
+        // Veckodagar (endast mån-fre)
+        $days = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag'];
+        $weekDates = [];
+        for ($i = 0; $i < 5; $i++) {
+            $dTs = strtotime('+' . $i . ' days', $mondayTs);
+            $weekDates[] = [
+                'label' => $days[$i],
+                'date' => date('Y-m-d', $dTs),
+                'display' => date('j/n', $dTs)
+            ];
+        }
+
+        // Veckans start/slut för label
+        $weekStartLabel = htmlspecialchars(date('j M Y', $mondayTs), ENT_QUOTES, 'UTF-8');
+        $weekEndLabel = htmlspecialchars(date('j M Y', strtotime('+4 days', $mondayTs)), ENT_QUOTES, 'UTF-8');
+
+        return [
+            'periodsByDay' => $periodsByDay,
+            'mondayTs' => $mondayTs,
+            'prevTs' => $prevTs,
+            'nextTs' => $nextTs,
+            'showPrev' => $showPrev,
+            'weekDates' => $weekDates,
+            'weekStartLabel' => $weekStartLabel,
+            'weekEndLabel' => $weekEndLabel
+        ];
+    }
+    /**
      * Return availability periods from #__desk_availability_period that are not
      * already booked (no overlapping rows in #__booking).
      *
