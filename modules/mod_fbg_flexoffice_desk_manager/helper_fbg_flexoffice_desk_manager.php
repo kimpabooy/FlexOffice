@@ -35,7 +35,7 @@ class ModFbgFlexofficeDeskManagerHelper
                     }
                     $columns = ['name'];
                     $values = [$db->quote($name)];
-                    self::insertWithIdFallback('l5e0b__fbgflexoffice_location', $columns, $values);
+                    self::insertWithIdFallback('l5e0b_fbgflexoffice_location', $columns, $values);
                     $app->enqueueMessage('Location created', 'message');
                     break;
 
