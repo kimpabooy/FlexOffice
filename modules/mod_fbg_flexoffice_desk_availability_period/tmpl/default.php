@@ -8,33 +8,6 @@ defined('_JEXEC') or die;
     <?php if (empty($periods)) : ?>
         <p>Inga lediga skrivbord hittades.</p>
     <?php else : ?>
-        <style>
-            .dap-list {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: grid;
-                gap: 0.5rem;
-            }
-
-            .dap-item {
-                border: 1px solid #e1e1e1;
-                padding: 0.75rem;
-                border-radius: 6px;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .dap-title {
-                font-weight: 600;
-                margin-bottom: 0.25rem;
-            }
-
-            .dap-meta {
-                color: #666;
-                font-size: 0.95rem;
-            }
-        </style>
 
         <ul class="dap-list">
             <?php foreach ($periods as $p) : ?>

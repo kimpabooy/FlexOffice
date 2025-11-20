@@ -44,7 +44,7 @@ class ModFbgFlexofficeBookingHelper
         $showPrev = ($prevTs >= $minMondayTs);
 
         // Veckodagar (endast mån-fre)
-        $days = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag'];
+        $days = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre'];
         $weekDates = [];
         for ($i = 0; $i < 5; $i++) {
             $dTs = strtotime('+' . $i . ' days', $mondayTs);

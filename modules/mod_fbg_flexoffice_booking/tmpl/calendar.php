@@ -38,7 +38,7 @@ $user = Factory::getApplication()->getIdentity();
         <tbody>
             <tr>
                 <?php foreach ($weekDates as $day): ?>
-                    <td style="vertical-align:top; padding:6px;">
+                    <td style="vertical-align:top; margin:0; padding:0px;">
                         <?php
                         $currentDate = $day['date'];
                         if (!empty($periodsByDay[$currentDate])) {
@@ -47,7 +47,7 @@ $user = Factory::getApplication()->getIdentity();
                                 $endTs = !empty($p->end_time) ? strtotime($p->end_time) : null;
                                 $startTime = $startTs ? htmlspecialchars(date('H:i', $startTs), ENT_QUOTES, 'UTF-8') : '';
                                 $endTime = $endTs ? htmlspecialchars(date('H:i', $endTs), ENT_QUOTES, 'UTF-8') : '';
-                                echo '<div style="font-size:90%; margin-top:4px;">';
+                                // echo '<div style="font-size:90%; margin-top:4px;">';
                                 $roomLabel = '';
                                 if (isset($p->room_name)) {
                                     $roomLabel = $p->room_name;
@@ -56,7 +56,7 @@ $user = Factory::getApplication()->getIdentity();
                                 }
                                 $roomLabelEsc = htmlspecialchars($roomLabel, ENT_QUOTES, 'UTF-8');
                                 if ($user->id) {
-                                    echo '<button type="button" class="btn btn-secondary btn-sm mod-booking-open" '
+                                    echo '<button type="button" class="mod-booking-open" '
                                         . 'data-period-id="' . (int)$p->id . '" '
                                         . 'data-desk="' . htmlspecialchars((int)$p->desk_id, ENT_QUOTES, 'UTF-8') . '" '
                                         . 'data-room="' . $roomLabelEsc . '" '
