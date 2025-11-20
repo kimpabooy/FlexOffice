@@ -29,7 +29,7 @@ $user = Factory::getApplication()->getIdentity();
 
     <table class="table table-bordered" style="table-layout:fixed;">
         <thead>
-            <tr>
+            <tr style="background-color: #333; color: white ">
                 <?php foreach ($weekDates as $day): ?>
                     <th><?php echo $day['label']; ?><br /><?php echo $day['display']; ?></th>
                 <?php endforeach; ?>
