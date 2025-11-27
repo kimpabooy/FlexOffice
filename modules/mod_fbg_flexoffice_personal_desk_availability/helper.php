@@ -1,6 +1,4 @@
 <?php
-// Kopia av helper_fbg_flexoffice_personal_desk_availability.php för com_ajax
-// Se till att klassnamnet och metoderna är identiska
 
 defined('_JEXEC') or die;
 
@@ -18,6 +16,7 @@ class ModFbgFlexofficePersonalDeskAvailabilityHelper
     {
         return PersonalDeskService::handleRequest(true);
     }
+    
     /**
      * Delegate POST handling to the service layer.
      */
@@ -25,12 +24,18 @@ class ModFbgFlexofficePersonalDeskAvailabilityHelper
     {
         return PersonalDeskService::handleRequest();
     }
-
+    
+    /**
+     * Get list of desks for the current user.
+     */
     public static function getDesks()
     {
         return PersonalDeskService::getDesks();
     }
 
+    /**
+     * Get recent bookings.
+     */
     public static function getRecentAvails($isSuperUser = false)
     {
         return PersonalDeskService::getRecentAvails($isSuperUser);

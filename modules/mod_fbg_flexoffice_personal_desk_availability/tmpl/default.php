@@ -7,9 +7,10 @@ use Joomla\CMS\Session\Session;
 <div class="mod-personal-desk-availability">
     <h3>Sätt skrivbord som tillgängligt</h3>
 
-    <form id="mod_personal_desk_availability_form" method="post" style="gap: 10px; display: flex; flex-direction: column;">
+    <form id="mod_personal_desk_availability_form" method="post">
         <div>
-            <label for="desk_id">Välj skrivbord</label>
+            <h6 style="margin: 0;">Välj skrivbord</h6>
+            <label for="desk_id"></label>
             <select name="desk_id" id="desk_id">
                 <?php foreach ($desks as $d) : ?>
                     <option value="<?php echo (int) $d->id; ?>"><?php echo 'Skrivbord #' . (int) $d->id . ' — ' . htmlspecialchars($d->room_name ?? '', ENT_QUOTES, 'UTF-8'); ?></option>
@@ -18,26 +19,13 @@ use Joomla\CMS\Session\Session;
         </div>
 
         <div>
-            <label for="label">Kommentar (valfritt)</label>
+            <h6 style="margin: 0; margin-top: 10px;">Kommentar (valfritt)</h6>
+            <label for="label"></label>
             <input type="text" name="label" id="label" placeholder="Kort kommentar">
         </div>
 
-        <!-- <div>
-            <label for="start_date">Från</label>
-            <input type="date" name="start_date" id="start_date" required>
-            <label for="start_time"></label>
-            <input type="time" name="start_time" id="start_time" required>
-        </div>
-
         <div>
-            <label for="end_date">Till</label>
-            <input type="date" name="end_date" id="end_date">
-            <label for="end_time"></label>
-            <input type="time" name="end_time" id="end_time">
-        </div> -->
-
-        <div>
-            <h5>Välj typ av tillgänglighet</h5>
+            <h5 style="margin: 0; margin-top: 10px;">Välj typ av tillgänglighet</h5>
             <label>
                 <input type="radio" name="availability_mode" value="range" id="mode_range" checked>
                 Boka ett intervall (från - till)
@@ -50,16 +38,16 @@ use Joomla\CMS\Session\Session;
         </div>
 
         <div id="rangeFields">
-            <h6>Ange intervall</h6>
+            <h6 style="margin: 0; margin-top: 10px;">Ange intervall</h6>
             <div>
-                <label for="start_date">Från</label>
+                <label style="display: inline-block; width: 40px;" for="start_date">Från:</label>
                 <input type="date" name="start_date" id="start_date" required>
                 <label for="start_time"></label>
                 <input type="time" name="start_time" id="start_time" required>
             </div>
 
             <div>
-                <label for="end_date">Till</label>
+                <label style="display: inline-block; width: 40px;" for="end_date">Till:</label>
                 <input type="date" name="end_date" id="end_date">
                 <label for="end_time"></label>
                 <input type="time" name="end_time" id="end_time">
@@ -67,7 +55,7 @@ use Joomla\CMS\Session\Session;
         </div>
 
         <div id="weekdayFields" style="display:none;">
-            <h6>Välj veckodag och antal veckor framåt</h6>
+            <h6 style="margin: 0; margin-top: 10px;">Välj veckodag och antal veckor framåt</h6>
             <label for="repeat_weekday"></label>
             <select name="repeat_weekday" id="repeat_weekday">
                 <option value="0">(Välj veckodag)</option>
