@@ -11,19 +11,25 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
 <div class="mod-desk-manager-combined">
     <h3>Skapa Nytt</h3>
 
-
     <div class="mod-desk-manager-combined-box">
         <!-- Plats -->
         <form method="post" id="createLocationForm" style="margin-bottom: 0;">
-            <label>Plats
-                <select id="location_select" name="group_location_id">
-                    <option value="">-- Välj plats --</option>
-                    <?php foreach ($locations as $loc) : ?>
-                        <option value="<?php echo (int) $loc->id; ?>"> <?php echo htmlspecialchars($loc->name, ENT_QUOTES, 'UTF-8'); ?> </option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" id="new_location_btn" class="ny-btn">Ny</button>
-            </label>
+            <div style="margin-bottom: 5px;">
+                <label>Plats
+                    <div>
+                        <select id="location_select" name="group_location_id">
+                            <option value="">-- Välj plats --</option>
+                            <?php foreach ($locations as $loc) : ?>
+                                <option value="<?php echo (int) $loc->id; ?>"> <?php echo htmlspecialchars($loc->name, ENT_QUOTES, 'UTF-8'); ?> </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div>
+                            <button type="button" id="new_location_btn" class="ny-btn">Skapa ny</button>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
             <div id="new_location_div" style="display:none; margin-top: 5px;">
                 <input type="text" name="location_name" placeholder="Ny plats..." required>
                 <input type="hidden" name="mod_task" value="create.location">
@@ -34,15 +40,22 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
         </form>
         <!-- Avdelning -->
         <form method="post" id="createGroupForm" style="margin-bottom: 0;">
-            <label>Avdelning
-                <select id="group_select" name="room_group_id">
-                    <option value="">-- Välj avdelning --</option>
-                    <?php foreach ($groups as $g) : ?>
-                        <option value="<?php echo (int) $g->id; ?>" data-location-id="<?php echo (int) $g->location_id; ?>"> <?php echo htmlspecialchars($g->name, ENT_QUOTES, 'UTF-8'); ?> </option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" id="new_group_btn" class="ny-btn">Ny</button>
-            </label>
+            <div style="margin-bottom: 5px;">
+                <label>Avdelning
+                    <div>
+                        <select id="group_select" name="room_group_id">
+                            <option value="">-- Välj avdelning --</option>
+                            <?php foreach ($groups as $g) : ?>
+                                <option value="<?php echo (int) $g->id; ?>" data-location-id="<?php echo (int) $g->location_id; ?>"> <?php echo htmlspecialchars($g->name, ENT_QUOTES, 'UTF-8'); ?> </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div>
+                            <button type="button" id="new_group_btn" class="ny-btn">Skapa ny</button>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
             <div id="new_group_div" style="display:none; margin-top: 5px;">
                 <input type="text" name="group_name" placeholder="Ny avdelning..." required>
                 <input type="hidden" name="group_location_id" id="new_group_location_id">
@@ -54,15 +67,22 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
         </form>
         <!-- Rum -->
         <form method="post" id="createRoomForm" style="margin-bottom: 0;">
-            <label>Rum
-                <select id="room_select" name="desk_room_id">
-                    <option value="">-- Välj rum --</option>
-                    <?php foreach ($rooms as $r) : ?>
-                        <option value="<?php echo (int) $r->id; ?>" data-group-id="<?php echo (int) $r->location_group_id; ?>"> <?php echo htmlspecialchars($r->name, ENT_QUOTES, 'UTF-8'); ?> </option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" id="new_room_btn" class="ny-btn">Ny</button>
-            </label>
+            <div style="margin-bottom: 5px;">
+                <label>Rum
+                    <div>
+                        <select id="room_select" name="desk_room_id">
+                            <option value="">-- Välj rum --</option>
+                            <?php foreach ($rooms as $r) : ?>
+                                <option value="<?php echo (int) $r->id; ?>" data-group-id="<?php echo (int) $r->location_group_id; ?>"> <?php echo htmlspecialchars($r->name, ENT_QUOTES, 'UTF-8'); ?> </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div>
+                            <button type="button" id="new_room_btn" class="ny-btn">Skapa ny</button>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
             <div id="new_room_div" style="display:none; margin-top: 5px;">
                 <input type="text" name="room_name" placeholder="Nytt rum..." required>
                 <input type="hidden" name="room_group_id" id="new_room_group_id">
@@ -77,7 +97,9 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
             <input type="hidden" name="mod_task" value="create.desk">
             <input type="hidden" name="desk_room_id" id="desk_room_id">
             <input type="hidden" name="<?php echo Session::getFormToken(); ?>" value="1">
-            <button type="submit" id="create_desk_btn" disabled>Skapa skrivbord</button>
+            <div>
+                <button type="submit" id="create_desk_btn" disabled>Skapa skrivbord</button>
+            </div>
         </form>
     </div>
 </div>
