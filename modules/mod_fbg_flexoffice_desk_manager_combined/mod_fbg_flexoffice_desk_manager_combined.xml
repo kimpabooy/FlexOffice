@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="4.0" client="site" method="upgrade">
+    <name>mod_fbg_flexoffice_desk_manager_combined</name>
+    <author>Kimpabooy</author>
+    <version>1.0.0</version>
+    <description>Kombinerad FlexOffice Desk Manager-modul</description>
+    <files>
+        <filename module="mod_fbg_flexoffice_desk_manager_combined">mod_fbg_flexoffice_desk_manager_combined.php</filename>
+        <filename>helper_fbg_flexoffice_desk_manager_combined.php</filename>
+        <folder>tmpl</folder>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.mod_fbg_flexoffice_desk_manager_combined.ini</language>
+    </languages>
+</extension>
