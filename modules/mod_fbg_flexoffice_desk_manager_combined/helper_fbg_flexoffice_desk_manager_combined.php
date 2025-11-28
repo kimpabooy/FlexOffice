@@ -26,6 +26,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
 
         try {
             switch ($task) {
+
                 case 'create.location':
                     $name = trim($input->post->getString('location_name'));
                     if ($name === '') {
@@ -36,6 +37,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
                     self::insertWithIdFallback('l5e0b_fbgflexoffice_location', $columns, $values);
                     $app->enqueueMessage('Location created', 'message');
                     break;
+
                 case 'create.group':
                     $location_id = (int) $input->post->getInt('group_location_id');
                     $name = trim($input->post->getString('group_name'));
@@ -47,6 +49,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
                     self::insertWithIdFallback('l5e0b_fbgflexoffice_location_group', $columns, $values);
                     $app->enqueueMessage('Group created', 'message');
                     break;
+
                 case 'create.room':
                     $group_id = (int) $input->post->getInt('room_group_id');
                     $name = trim($input->post->getString('room_name'));
@@ -58,6 +61,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
                     self::insertWithIdFallback('l5e0b_fbgflexoffice_room', $columns, $values);
                     $app->enqueueMessage('Room created', 'message');
                     break;
+
                 case 'create.desk':
                     $room_id = (int) $input->post->getInt('desk_room_id');
                     $name = trim($input->post->getString('desk_name'));
@@ -72,6 +76,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
                     self::insertWithIdFallback('l5e0b_fbgflexoffice_desk', $columns, $values);
                     $app->enqueueMessage('Desk created', 'message');
                     break;
+
                 default:
                     $app->enqueueMessage('Unknown task', 'warning');
                     break;
@@ -85,6 +90,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
         exit;
     }
 
+    // Insert with ID fallback
     private static function insertWithIdFallback($table, array $columns, array $values)
     {
         $db = Factory::getDbo();
@@ -116,6 +122,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
         }
     }
 
+    // Fetch all locations
     public static function getLocations()
     {
         $db = Factory::getDbo();
@@ -126,6 +133,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
         return $db->loadObjectList();
     }
 
+    // Additional helper methods to fetch groups, rooms, and desks
     public static function getGroups($locationId = 0)
     {
         $db = Factory::getDbo();
@@ -139,6 +147,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
         return $db->loadObjectList();
     }
 
+    // Get rooms, filtered by group ID
     public static function getRooms($groupId = 0)
     {
         $db = Factory::getDbo();
@@ -152,6 +161,7 @@ class ModFbgFlexofficeDeskManagerCombinedHelper
         return $db->loadObjectList();
     }
 
+    // Get desks, Filtered by room ID
     public static function getDesks($roomId = 0)
     {
         $db = Factory::getDbo();

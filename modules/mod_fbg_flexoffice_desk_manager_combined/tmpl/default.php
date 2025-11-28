@@ -10,8 +10,8 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
 ?>
 <div class="mod-desk-manager-combined">
     <h3>Skapa Nytt</h3>
-
     <div class="mod-desk-manager-combined-box">
+        
         <!-- Plats -->
         <form method="post" id="createLocationForm" style="margin-bottom: 0;">
             <div style="margin-bottom: 5px;">
@@ -38,6 +38,7 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
                 <button type="button" id="cancel_location_btn">Avbryt</button>
             </div>
         </form>
+
         <!-- Avdelning -->
         <form method="post" id="createGroupForm" style="margin-bottom: 0;">
             <div style="margin-bottom: 5px;">
@@ -65,6 +66,7 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
                 <button type="button" id="cancel_group_btn">Avbryt</button>
             </div>
         </form>
+
         <!-- Rum -->
         <form method="post" id="createRoomForm" style="margin-bottom: 0;">
             <div style="margin-bottom: 5px;">
@@ -92,6 +94,7 @@ $rooms = ModFbgFlexofficeDeskManagerCombinedHelper::getRooms();
                 <button type="button" id="cancel_room_btn">Avbryt</button>
             </div>
         </form>
+        
         <!-- Skrivbord -->
         <form method="post" id="createDeskForm">
             <input type="hidden" name="mod_task" value="create.desk">
