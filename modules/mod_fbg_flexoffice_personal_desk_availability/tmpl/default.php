@@ -13,7 +13,7 @@ use Joomla\CMS\Session\Session;
             <label for="desk_id"></label>
             <select name="desk_id" id="desk_id">
                 <?php foreach ($desks as $d) : ?>
-                    <option value="<?php echo (int) $d->id; ?>"><?php echo 'Skrivbord #' . (int) $d->id . ' — ' . htmlspecialchars($d->room_name ?? '', ENT_QUOTES, 'UTF-8'); ?></option>
+                    <option value="<?php echo (int) $d->id; ?>"><?php echo 'Skrivbord #' . (int) $d->id . ' — ' . 'Rum: ' . htmlspecialchars($d->room_name ?? '', ENT_QUOTES, 'UTF-8'); ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
